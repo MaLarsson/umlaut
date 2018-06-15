@@ -16,6 +16,14 @@ struct ebo_elem {
     constexpr ebo_elem(T&& value)
 	: m_value(std::forward<T>(value)) {}
 
+    constexpr value_type& get_value() {
+	return m_value;
+    }
+
+    constexpr const value_type& get_value() const {
+	return m_value;
+    }
+
  private:
     value_type m_value;
 };
@@ -28,6 +36,14 @@ struct ebo_elem<T, Index, true> : T {
 
     constexpr ebo_elem(T&& value)
 	: value_type(std::forward<T>(value)) {}
+
+    constexpr value_type& get_value() {
+	return *this;
+    }
+
+    constexpr const value_type& get_value() const {
+	return *this;
+    }
 };
 
 } // namespace umlaut::detail
@@ -47,6 +63,22 @@ class pair : private detail::ebo_elem<T, 0>, private detail::ebo_elem<U, 1> {
 
     constexpr pair(T&& first, U&& second)
 	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
+
+    constexpr first_type& first() {
+	return static_cast<Base1&>(*this).get_value();
+    }
+
+    constexpr const first_type& first() const {
+	return static_cast<const Base1&>(*this).get_value();
+    }
+
+    constexpr second_type& second() {
+	return static_cast<Base2&>(*this).get_value();
+    }
+
+    constexpr const second_type& second() const {
+	return static_cast<const Base2&>(*this).get_value();
+    }
 };
 
 } // namespace umlaut

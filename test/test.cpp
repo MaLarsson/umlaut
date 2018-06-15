@@ -2,7 +2,7 @@
 #include <umlaut.hpp>
 
 struct empty_cat {
-    const char* purr() const { return "purrrr"; }
+    const char* purr() const { return "purr"; }
 };
 
 TEST(pair, size) {
@@ -15,7 +15,10 @@ TEST(pair, size) {
 }
 
 TEST(pair, access) {
-    // TODO ...
+    umlaut::pair<int, empty_cat> pair{42, {}};
+
+    EXPECT_EQ(pair.first(), 42);
+    EXPECT_EQ(pair.second().purr(), "purr");
 }
 
 int main(int argc, char** argv) {
