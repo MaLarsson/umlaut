@@ -7,13 +7,13 @@
 
 namespace umlaut::detail {
 
-template <typename T, std::size_t Index, bool = is_ebo_eligable_v<T>>
-struct ebo_elem {
+template <typename T, std::size_t Index, bool = is_empty_base_optimizable_v<T>>
+struct compressed_element {
     using value_type = T;
 
-    constexpr ebo_elem() : m_value() {}
+    constexpr compressed_element() : m_value() {}
 
-    constexpr ebo_elem(T&& value)
+    constexpr compressed_element(T&& value)
 	: m_value(std::forward<T>(value)) {}
 
     constexpr value_type& get_value() {
@@ -29,12 +29,12 @@ struct ebo_elem {
 };
 
 template <typename T, std::size_t Index>
-struct ebo_elem<T, Index, true> : T {
+struct compressed_element<T, Index, true> : T {
     using value_type = T;
 
-    constexpr ebo_elem() : T() {}
+    constexpr compressed_element() : T() {}
 
-    constexpr ebo_elem(T&& value)
+    constexpr compressed_element(T&& value)
 	: value_type(std::forward<T>(value)) {}
 
     constexpr value_type& get_value() {
@@ -51,17 +51,18 @@ struct ebo_elem<T, Index, true> : T {
 namespace umlaut {
 
 template <typename T, typename U>
-class pair : private detail::ebo_elem<T, 0>, private detail::ebo_elem<U, 1> {
-    using Base1 = detail::ebo_elem<T, 0>;
-    using Base2 = detail::ebo_elem<U, 1>;
+class compressed_pair : private detail::compressed_element<T, 0>,
+			private detail::compressed_element<U, 1> {
+    using Base1 = detail::compressed_element<T, 0>;
+    using Base2 = detail::compressed_element<U, 1>;
 
  public:
     using first_type = typename Base1::value_type;
     using second_type = typename Base2::value_type;
 
-    constexpr pair() : Base1(), Base2() {}
+    constexpr compressed_pair() : Base1(), Base2() {}
 
-    constexpr pair(T&& first, U&& second)
+    constexpr compressed_pair(T&& first, U&& second)
 	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
 
     constexpr first_type& first() {
