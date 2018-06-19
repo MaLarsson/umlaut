@@ -20,23 +20,38 @@ endif()
 add_library(umlaut INTERFACE)
 target_include_directories(umlaut INTERFACE include)
 
-# Add google test library
-include(cmake/DownloadProject.cmake)
+# Download and unpack googletest at configure time
+configure_file(cmake/googletest.cmake.in googletest-download/CMakeLists.txt)
 
-download_project(
-  PROJ googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG master
-  UPDATE_DISCONNECTED 1)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+if (result)
+  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+endif()
 
-add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+if (result)
+  message(FATAL_ERROR "Build step for googletest failed: ${result}")
+endif()
+
+# Prevent overriding the parent project's compiler/linker
+# settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+# Add googletest, this defines the gtest and gtest_main targets.
+add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+                 ${CMAKE_BINARY_DIR}/googletest-build
+                 EXCLUDE_FROM_ALL)
 
 # Add tests
 include(CTest)
 enable_testing()
 
 add_executable(umlaut_test test/test.cpp)
-target_link_libraries(umlaut_test umlaut gtest)
+target_link_libraries(umlaut_test umlaut gtest_main)
 
 add_test(all_tests umlaut_test)
 
