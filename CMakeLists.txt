@@ -45,20 +45,24 @@ endif()
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # Add googletest, this defines the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-                 ${CMAKE_BINARY_DIR}/googletest-build
-                 EXCLUDE_FROM_ALL)
+add_subdirectory(
+  ${CMAKE_BINARY_DIR}/googletest-src
+  ${CMAKE_BINARY_DIR}/googletest-build
+  EXCLUDE_FROM_ALL)
 
-# Add tests
+# Add check target
 include(CTest)
 enable_testing()
 
-add_executable(umlaut_test test/test.cpp)
+add_executable(umlaut_test EXCLUDE_FROM_ALL
+  test/compressed_pair.cpp
+  test/small_vector.cpp)
+
 target_link_libraries(umlaut_test umlaut gtest_main)
 
 add_test(all_tests umlaut_test)
 
-add_custom_target(tests
+add_custom_target(check
   COMMAND ${CMAKE_CTEST_COMMAND} --verbose
   DEPENDS umlaut_test)
 
