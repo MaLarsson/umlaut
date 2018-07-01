@@ -1,4 +1,7 @@
-# Main CMakeLists.txt
+# Copyright Marcus Larsson 2018
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+
 cmake_minimum_required(VERSION 3.5)
 project(umlaut)
 
@@ -58,3 +61,24 @@ add_test(all_tests umlaut_test)
 add_custom_target(tests
   COMMAND ${CMAKE_CTEST_COMMAND} --verbose
   DEPENDS umlaut_test)
+
+# Add doc target
+find_package(Doxygen)
+
+if (NOT DOXYGEN_FOUND)
+  message(WARNING "Doxygen was not found; the 'doc' and 'docset' targets "
+    "will be unavailable.")
+  return()
+endif()
+
+set(UMLAUT_HTML_OUTPUT       html)
+set(UMLAUT_GENERATE_DOCSET   NO)
+set(UMLAUT_GENERATE_TREEVIEW YES)
+set(UMLAUT_SEARCHENGINE      YES)
+
+configure_file(doc/Doxyfile.in documentation.doxygen @ONLY)
+add_custom_target(doc
+  COMMAND ${CMAKE_COMMAND} -E remove_directory html
+  COMMAND ${DOXYGEN_EXECUTABLE} documentation.doxygen
+  COMMENT "Generating API documentation with Doxygen"
+  VERBATIM)

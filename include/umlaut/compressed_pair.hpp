@@ -1,3 +1,10 @@
+/// @file
+/// Defines umlaut::compressed_pair.
+///
+/// @copyright Marcus Larsson 2018
+/// Distributed under the Boost Software License, Version 1.0.
+/// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+
 #pragma once
 
 #include "traits.hpp"
@@ -50,20 +57,24 @@ struct compressed_element<T, Index, true> : T {
 
 namespace umlaut {
 
-template <typename T, typename U>
-class compressed_pair : private detail::compressed_element<T, 0>,
-			private detail::compressed_element<U, 1> {
-    using Base1 = detail::compressed_element<T, 0>;
-    using Base2 = detail::compressed_element<U, 1>;
+/// Generic container for two elements.
+template <typename First, typename Second>
+class compressed_pair : private detail::compressed_element<First, 0>,
+			private detail::compressed_element<Second, 1> {
+    using Base1 = detail::compressed_element<First, 0>;
+    using Base2 = detail::compressed_element<Second, 1>;
 
  public:
     using first_type = typename Base1::value_type;
     using second_type = typename Base2::value_type;
 
+    /// Default constructs the `pair`. Only exists when both elements
+    /// of the pair are default constructible.
     constexpr compressed_pair() : Base1(), Base2() {}
 
-    constexpr compressed_pair(T&& first, U&& second)
-	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
+    constexpr compressed_pair(first_type&& first, second_type&& second)
+	: Base1(std::forward<first_type>(first)),
+	  Base2(std::forward<second_type>(second)) {}
 
     constexpr first_type& first() {
 	return static_cast<Base1&>(*this).get_value();
