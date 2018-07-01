@@ -1,6 +1,14 @@
+/// @file
+/// Defines umlaut::small_vector.
+///
+/// @copyright Marcus Larsson 2018
+/// Distributed under the Boost Software License, Version 1.0.
+/// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+
 #pragma once
 
 #include "compressed_pair.hpp"
+#include "tags.hpp"
 
 #include <memory>
 #include <iterator>
@@ -9,9 +17,11 @@
 
 namespace umlaut {
 
+/// Generic container.
 template <typename T, typename Alloc = std::allocator<T>>
 class small_vector_base {
     using alloc_traits = typename std::allocator_traits<Alloc>::template rebind_traits<T>;
+
 public:
     using value_type = T;
     using allocator_type = typename alloc_traits::allocator_type;
@@ -25,6 +35,12 @@ public:
     using const_iterator = const value_type*;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    /// Constructs the `vector` from a list of values.
+    template <typename ...Ts>
+    small_vector_base(list_construct_t, Ts&&... values) {
+	// TODO ...
+    }
 
  private:
     compressed_pair<pointer, allocator_type> m_data_and_alloc;

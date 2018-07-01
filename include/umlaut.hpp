@@ -8,5 +8,6 @@
 #pragma once
 
 #include "umlaut/compressed_pair.hpp"
-#include "umlaut/traits.hpp"
 #include "umlaut/small_vector.hpp"
+#include "umlaut/tags.hpp"
+#include "umlaut/traits.hpp"
