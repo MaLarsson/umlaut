@@ -3,7 +3,7 @@
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 PROJECT_NAME            = "Umlaut"
-PROJECT_BRIEF           = "..."
+PROJECT_BRIEF           = "C++17 Generic Template Library"
 PROJECT_LOGO            =
 PROJECT_NUMBER          = @umlaut_VERSION_STRING@
 
@@ -107,7 +107,7 @@ HTML_COLORSTYLE_GAMMA   = 80
 HTML_TIMESTAMP          = NO
 HTML_DYNAMIC_SECTIONS   = YES
 HTML_INDEX_NUM_ENTRIES  = 0
-DISABLE_INDEX           = YES
+DISABLE_INDEX           = NO
 GENERATE_TREEVIEW       = @UMLAUT_GENERATE_TREEVIEW@
 TREEVIEW_WIDTH          = 270
 EXT_LINKS_IN_WINDOW     = NO

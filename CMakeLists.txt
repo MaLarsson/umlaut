@@ -77,7 +77,7 @@ endif()
 
 set(UMLAUT_HTML_OUTPUT       html)
 set(UMLAUT_GENERATE_DOCSET   NO)
-set(UMLAUT_GENERATE_TREEVIEW YES)
+set(UMLAUT_GENERATE_TREEVIEW NO)
 set(UMLAUT_SEARCHENGINE      YES)
 
 configure_file(doc/Doxyfile.in documentation.doxygen @ONLY)
