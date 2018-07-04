@@ -74,6 +74,17 @@ install:
       export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/install/lib"
     fi
 
+  ############################################################################
+  # Install a recent Doxygen
+  ############################################################################
+  - |
+    if [[ "${DOCUMENTATION}" == "true" ]]; then
+      DOXYGEN_URL="http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.11.linux.bin.tar.gz"
+      mkdir doxygen && travis_retry wget --quiet -O - ${DOXYGEN_URL} | tar --strip-components=1 -xz -C doxygen
+      export PATH=${DEPS_DIR}/doxygen/bin:${PATH}
+      doxygen --version
+    fi
+
 before-script:
   ############################################################################
   # Set the git identity (for pushing the documentation and the benchmarks)
@@ -88,33 +99,5 @@ before-script:
   - (mkdir build && cd build && cmake .. ${CMAKE_OPTIONS})
 
 script:
-  ############################################################################
-  # Only push the documentation when we're on master, otherwise just make sure
-  # it builds properly.
-  ############################################################################
-  - |
-    if [[ "${DOCUMENTATION}" == "true" ]]; then
-      cd "${TRAVIS_BUILD_DIR}"
-      (cd build ! cmake --build . --target doc 2>&1 | grep -E "warning|error") || exit 1
-      if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
-        # Suppress output to avoid leaking the token when the command fails
-        git clone https://malarsson:${GITHUB_TOKEN}@github.com/malarsson/umlaut --depth 1 --branch=gh-pages doc/html &>/dev/null
-        rm -rf doc/html/{search,*.png,*.css,*.js,*.html}
-        cp -R build/doc/html/* doc/html/
-        pushd doc/html
-        git add --all .
-        git commit --allow-empty -m "Update documentation to ${TRAVIS_COMMIT:0:7}"
-        # Suppress output to avoid leaking the token
-        travis_retry git push origin gh-pages &>/dev/null
-        popd
-      fi
-    fi
-
-  ############################################################################
-  # Build and run the unit tests.
-  ############################################################################
-  - |
-    if [[ "${UNIT_TESTS}" == "true" ]]; then
-      cd "${TRAVIS_BUILD_DIR}"
-      (cd build && cmake --build . --target check -- -j2)
-    fi
+  - cd "${TRAVIS_BUILD_DIR}"
+  - (cd build && cmake --build . --target check -- -j2)
