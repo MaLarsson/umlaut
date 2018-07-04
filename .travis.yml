@@ -9,8 +9,9 @@ matrix:
     # Build with all the supported compilers
     ##########################################################################
     # Clang 5.0
-    - env: COMPILER=clang++-5.0
-      addons: { apt: { packages: ["clang-5.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+    - env: UNIT_TESTS=true COMPILER=clang++-5.0
+      addons: &defaults { apt: { packages: ["clang-5.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+
 
 install:
   ############################################################################
@@ -75,5 +76,10 @@ install:
   - (mkdir build && cd build && cmake .. ${CMAKE_OPTIONS})
 
 script:
-  - cd "${TRAVIS_BUILD_DIR}"
-  - (cd build && cmake --build . --target check -- -j2)
+  ############################################################################
+  # Build and run the unit tests.
+  ############################################################################
+  - |
+    if [[ "${UNIT_TESTS}" == "true" ]]; then
+      (cd "${TRAVIS_BUILD_DIR}/build" && cmake --build . --target check -- -j2)
+    fi
