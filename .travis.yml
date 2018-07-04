@@ -10,7 +10,7 @@ matrix:
     ##########################################################################
     # Clang 5.0
     - env: UNIT_TESTS=true COMPILER=clang++-5.0
-      addons: &defaults { apt: { packages: ["clang-5.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+      addons: &defaults { apt: { packages: ["clang-5.0", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
 
     ##########################################################################
     # Generate the documentation
@@ -98,7 +98,6 @@ script:
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
       (cd "${TRAVIS_BUILD_DIR}/build" && cmake --build . --target doc)
-      ls
       # Suppress output to avoid leaking the token when the command fails
       git clone https://malarsson:${GITHUB_TOKEN}@github.com/malarsson/umlaut --depth 1 --branch=gh-pages doc/html &>/dev/null
       rm -rf doc/html/{search,*.png,*.css,*.js,*.html}
