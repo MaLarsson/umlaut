@@ -94,7 +94,8 @@ script:
   ############################################################################
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
-      (! cmake --build . --target doc 2>&1 | grep -E "warning|error") || exit 1
+      cd "${TRAVIS_BUILD_DIR}"
+      (cd build ! cmake --build . --target doc 2>&1 | grep -E "warning|error") || exit 1
       if [[ "${TRAVIS_PULL_REQUEST}" == "false" && "${TRAVIS_BRANCH}" == "master" ]]; then
         # Suppress output to avoid leaking the token when the command fails
         git clone https://malarsson:${GITHUB_TOKEN}@github.com/malarsson/umlaut --depth 1 --branch=gh-pages doc/html &>/dev/null
@@ -114,5 +115,6 @@ script:
   ############################################################################
   - |
     if [[ "${UNIT_TESTS}" == "true" ]]; then
-      (cmake --build . --target check -- -j2)
+      cd "${TRAVIS_BUILD_DIR}"
+      (cd build && cmake --build . --target check -- -j2)
     fi
