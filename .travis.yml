@@ -98,6 +98,7 @@ script:
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
       (cd "${TRAVIS_BUILD_DIR}/build" && cmake --build . --target doc)
+      ls
       # Suppress output to avoid leaking the token when the command fails
       git clone https://malarsson:${GITHUB_TOKEN}@github.com/malarsson/umlaut --depth 1 --branch=gh-pages doc/html &>/dev/null
       rm -rf doc/html/{search,*.png,*.css,*.js,*.html}
