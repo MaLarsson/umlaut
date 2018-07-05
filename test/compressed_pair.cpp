@@ -4,9 +4,12 @@
 
 #include <gtest/gtest.h>
 #include <umlaut.hpp>
+#include <string>
+
+namespace {
 
 struct empty_cat {
-    const char* purr() const { return "purr"; }
+    std::string purr() const { return "purr"; }
 };
 
 TEST(compressedPair, size) {
@@ -24,3 +27,5 @@ TEST(compressedPair, access) {
     EXPECT_EQ(pair.first(), 42);
     EXPECT_EQ(pair.second().purr(), "purr");
 }
+
+} // namespace

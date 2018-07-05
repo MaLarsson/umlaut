@@ -5,6 +5,10 @@
 #include <gtest/gtest.h>
 #include <umlaut.hpp>
 
+namespace {
+
 TEST(smallVectorBase, listInitialization) {
     umlaut::small_vector_base<int> v(umlaut::list_construct, 1, 2, 3);
 }
+
+} // namespace
