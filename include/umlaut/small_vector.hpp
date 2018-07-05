@@ -13,6 +13,7 @@
 #include <memory>
 #include <iterator>
 #include <utility>
+#include <tuple>
 #include <cstddef>
 
 namespace umlaut {
@@ -39,6 +40,27 @@ public:
     /// Constructs the `vector` from a list of values.
     template <typename ...Ts>
     small_vector_base(list_construct_t, Ts&&... values) {
+	reserve(sizeof...(values));
+	(emplace_back(std::forward<Ts>(values)), ...);
+    }
+
+    template <typename ...Tuples>
+    small_vector_base(std::piecewise_construct_t, Tuples&&... tuples) {
+	reserve(sizeof...(tuples));
+
+	auto forwarding_lambda = [this](auto&&... args) {
+	    emplace_back(std::forward<decltype(args)>(args)...);
+	};
+
+	(std::apply(forwarding_lambda, tuples), ...);
+    }
+
+    void reserve(size_type n) {
+	// TODO ...
+    }
+
+    template <typename ...Args>
+    void emplace_back(Args&&... args) { // value_type&
 	// TODO ...
     }
 
