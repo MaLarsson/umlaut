@@ -9,6 +9,10 @@ namespace {
 
 TEST(smallVectorBase, listInitialization) {
     umlaut::small_vector_base<int> v(umlaut::list_construct, 1, 2, 3);
+
+    EXPECT_EQ(v[0], 1);
+    EXPECT_EQ(v[1], 2);
+    EXPECT_EQ(v[2], 3);
 }
 
 TEST(smallVectorBase, piecewiseConstuct) {

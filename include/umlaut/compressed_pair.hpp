@@ -20,8 +20,9 @@ struct compressed_element {
 
     constexpr compressed_element() : m_value() {}
 
-    constexpr compressed_element(T&& value)
-	: m_value(std::forward<T>(value)) {}
+    template <typename U = T>
+    constexpr compressed_element(U&& value)
+	: m_value(std::forward<U>(value)) {}
 
     constexpr value_type& get_value() {
 	return m_value;
@@ -39,10 +40,11 @@ template <typename T, std::size_t Index>
 struct compressed_element<T, Index, true> : T {
     using value_type = T;
 
-    constexpr compressed_element() : T() {}
+    constexpr compressed_element() : value_type() {}
 
-    constexpr compressed_element(T&& value)
-	: value_type(std::forward<T>(value)) {}
+    template <typename U = T>
+    constexpr compressed_element(U&& value)
+	: value_type(std::forward<U>(value)) {}
 
     constexpr value_type& get_value() {
 	return *this;
@@ -65,29 +67,37 @@ class compressed_pair : private detail::compressed_element<First, 0>,
     using Base2 = detail::compressed_element<Second, 1>;
 
  public:
-    using first_type = typename Base1::value_type;
-    using second_type = typename Base2::value_type;
+    /// @name Aliases
+    /// @{
+    using first_type = First;
+    using second_type = Second;
+    // @}
 
-    /// Default constructs the `pair`. Only exists when both elements
-    /// of the pair are default constructible.
+    /// @brief Default constructs the `compressed_pair`.
     constexpr compressed_pair() : Base1(), Base2() {}
 
-    constexpr compressed_pair(first_type&& first, second_type&& second)
-	: Base1(std::forward<first_type>(first)),
-	  Base2(std::forward<second_type>(second)) {}
+    /// @brief TODO ...
+    template <typename T = First, typename U = Second>
+    constexpr compressed_pair(T&& first, U&& second)
+	: Base1(std::forward<T>(first)),
+	  Base2(std::forward<U>(second)) {}
 
+    /// @brief TODO ...
     constexpr first_type& first() {
 	return static_cast<Base1&>(*this).get_value();
     }
 
+    /// @brief Const overload of `compressed_pair::first()`.
     constexpr const first_type& first() const {
 	return static_cast<const Base1&>(*this).get_value();
     }
 
+    /// @brief TODO ...
     constexpr second_type& second() {
 	return static_cast<Base2&>(*this).get_value();
     }
 
+    /// @brief Const overload of `compressed_pair::second()`.
     constexpr const second_type& second() const {
 	return static_cast<const Base2&>(*this).get_value();
     }
