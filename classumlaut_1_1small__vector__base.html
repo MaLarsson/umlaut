@@ -140,7 +140,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_iterat
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a396031f78ae273b05b93151463baa177"><td class="memTemplParams" colspan="2"><a class="anchor" id="a396031f78ae273b05b93151463baa177"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a396031f78ae273b05b93151463baa177"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a396031f78ae273b05b93151463baa177">small_vector_base</a> (list_construct_t, Ts &amp;&amp;...values)</td></tr>
+<tr class="memitem:a396031f78ae273b05b93151463baa177"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a396031f78ae273b05b93151463baa177">small_vector_base</a> (<a class="el" href="structumlaut_1_1list__construct__t.html">list_construct_t</a>, Ts &amp;&amp;...values)</td></tr>
 <tr class="memdesc:a396031f78ae273b05b93151463baa177"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the <code>vector</code> from a list of values. <br /></td></tr>
 <tr class="separator:a396031f78ae273b05b93151463baa177"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Element access</div></td></tr>
@@ -150,7 +150,7 @@ constexpr value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a
 <tr class="separator:a3653efaa2cb6e4a098344b5af65f10d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac802f632ea3a340326a6e2b8b200ca8e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac802f632ea3a340326a6e2b8b200ca8e"></a>
 constexpr const value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#ac802f632ea3a340326a6e2b8b200ca8e">operator[]</a> (size_type i) const </td></tr>
-<tr class="memdesc:ac802f632ea3a340326a6e2b8b200ca8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const overload of <code>vector::operator[]</code>. <br /></td></tr>
+<tr class="memdesc:ac802f632ea3a340326a6e2b8b200ca8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const overload of <code><a class="el" href="classumlaut_1_1small__vector__base.html#a3653efaa2cb6e4a098344b5af65f10d5" title="Returns element at index i. ">small_vector_base::operator[]</a></code>. <br /></td></tr>
 <tr class="separator:ac802f632ea3a340326a6e2b8b200ca8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab170dd80d64aeb5da4596f825e89cd4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab170dd80d64aeb5da4596f825e89cd4"></a>
 constexpr value_type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#aab170dd80d64aeb5da4596f825e89cd4">data</a> () noexcept</td></tr>
@@ -158,7 +158,7 @@ constexpr value_type *&#160;</td><td class="memItemRight" valign="bottom"><a cla
 <tr class="separator:aab170dd80d64aeb5da4596f825e89cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae96df0f5cfe229134e04db491bc17c1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae96df0f5cfe229134e04db491bc17c1a"></a>
 constexpr const value_type *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#ae96df0f5cfe229134e04db491bc17c1a">data</a> () const  noexcept</td></tr>
-<tr class="memdesc:ae96df0f5cfe229134e04db491bc17c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const overload of vector::data(). <br /></td></tr>
+<tr class="memdesc:ae96df0f5cfe229134e04db491bc17c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const overload of <a class="el" href="classumlaut_1_1small__vector__base.html#aab170dd80d64aeb5da4596f825e89cd4" title="Returns a pointer to the underlying data of the vector. ">small_vector_base::data()</a>. <br /></td></tr>
 <tr class="separator:ae96df0f5cfe229134e04db491bc17c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Iterators</div></td></tr>
 <tr class="memitem:a26bd88a9af5f298daf34e58dcf94b5d0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26bd88a9af5f298daf34e58dcf94b5d0"></a>
@@ -206,23 +206,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a71dc498ba040db5d0cc940bd50c1aa1a">push_back</a> (value_type &amp;&amp;value)</td></tr>
 <tr class="memdesc:a71dc498ba040db5d0cc940bd50c1aa1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload taking an rvalue reference. <br /></td></tr>
 <tr class="separator:a71dc498ba040db5d0cc940bd50c1aa1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9638809e6a01ff4592096e0f7a0fad2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae9638809e6a01ff4592096e0f7a0fad2"></a>
-template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:ae9638809e6a01ff4592096e0f7a0fad2"><td class="memTemplItemLeft" align="right" valign="top">value_type &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#ae9638809e6a01ff4592096e0f7a0fad2">emplace_back</a> (Args &amp;&amp;...args)</td></tr>
-<tr class="memdesc:ae9638809e6a01ff4592096e0f7a0fad2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an element in place at the end of the vector by forwarding constructor arguments to the <code>value_type</code>, returns a reference to the constructed element. <br /></td></tr>
+<tr class="memitem:ae9638809e6a01ff4592096e0f7a0fad2"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr class="memitem:ae9638809e6a01ff4592096e0f7a0fad2"><td class="memTemplItemLeft" align="right" valign="top">value_type &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base_ae9638809e6a01ff4592096e0f7a0fad2.html#ae9638809e6a01ff4592096e0f7a0fad2">emplace_back</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:ae9638809e6a01ff4592096e0f7a0fad2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an element in place at the end of the vector.  <a href="classumlaut_1_1small__vector__base_ae9638809e6a01ff4592096e0f7a0fad2.html#ae9638809e6a01ff4592096e0f7a0fad2">More...</a><br /></td></tr>
 <tr class="separator:ae9638809e6a01ff4592096e0f7a0fad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Capacity</div></td></tr>
-<tr class="memitem:a5ffe785b4f8eaba5f1290b81c4f57ae8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ffe785b4f8eaba5f1290b81c4f57ae8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a5ffe785b4f8eaba5f1290b81c4f57ae8">reserve</a> (size_type n)</td></tr>
-<tr class="memdesc:a5ffe785b4f8eaba5f1290b81c4f57ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the numbers of elements in the <code>vector</code>. <br /></td></tr>
-<tr class="separator:a5ffe785b4f8eaba5f1290b81c4f57ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aabd898fbf4f1e98a69f53494a4a8db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4aabd898fbf4f1e98a69f53494a4a8db"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a4aabd898fbf4f1e98a69f53494a4a8db">reserve</a> (size_type new_cap)</td></tr>
+<tr class="memdesc:a4aabd898fbf4f1e98a69f53494a4a8db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the numbers of elements in the <code>vector</code>. <br /></td></tr>
+<tr class="separator:a4aabd898fbf4f1e98a69f53494a4a8db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f1a304f652c8be4968881299e84cb96"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f1a304f652c8be4968881299e84cb96"></a>
 constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#a4f1a304f652c8be4968881299e84cb96">size</a> () const  noexcept</td></tr>
 <tr class="memdesc:a4f1a304f652c8be4968881299e84cb96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the numbers of elements in the <code>vector</code>. <br /></td></tr>
 <tr class="separator:a4f1a304f652c8be4968881299e84cb96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab13b2fc71c43b474dc3afb4776534ad7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab13b2fc71c43b474dc3afb4776534ad7"></a>
 constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#ab13b2fc71c43b474dc3afb4776534ad7">capacity</a> () const  noexcept</td></tr>
-<tr class="memdesc:ab13b2fc71c43b474dc3afb4776534ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the potential number of elements in the <code>vector</code> before the `vector has to reallocate. <br /></td></tr>
+<tr class="memdesc:ab13b2fc71c43b474dc3afb4776534ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the potential number of elements in the <code>vector</code> before the <code>vector</code> has to reallocate. <br /></td></tr>
 <tr class="separator:ab13b2fc71c43b474dc3afb4776534ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac144fe2a91bdb44628c44df7d3bf3a1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac144fe2a91bdb44628c44df7d3bf3a1a"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#ac144fe2a91bdb44628c44df7d3bf3a1a">empty</a> () const  noexcept</td></tr>

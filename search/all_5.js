@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['push_5fback',['push_back',['../classumlaut_1_1small__vector__base.html#a68dea067d5d112f56570406e86dfcf8c',1,'umlaut::small_vector_base::push_back(const value_type &amp;value)'],['../classumlaut_1_1small__vector__base.html#a71dc498ba040db5d0cc940bd50c1aa1a',1,'umlaut::small_vector_base::push_back(value_type &amp;&amp;value)']]]
+  ['list_5fconstruct',['list_construct',['../structumlaut_1_1list__construct__t.html#a91195d34a96ae62ce9277e8afc689d4f',1,'umlaut::list_construct_t']]],
+  ['list_5fconstruct_5ft',['list_construct_t',['../structumlaut_1_1list__construct__t.html',1,'umlaut']]]
 ];

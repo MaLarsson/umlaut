@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['small_5fvector_5fbase',['small_vector_base',['../classumlaut_1_1small__vector__base.html',1,'umlaut']]]
+  ['is_5fempty_5fbase_5foptimizable',['is_empty_base_optimizable',['../structumlaut_1_1is__empty__base__optimizable.html',1,'umlaut']]]
 ];
