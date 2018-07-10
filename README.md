@@ -1,0 +1,1 @@
+# Umlaut [![Build Status](https://travis-ci.org/MaLarsson/umlaut.svg?branch=master)](https://travis-ci.org/MaLarsson/umlaut) [![Build status](https://ci.appveyor.com/api/projects/status/x1bnfmae110j5rnm?svg=true)](https://ci.appveyor.com/project/MaLarsson/umlaut)
