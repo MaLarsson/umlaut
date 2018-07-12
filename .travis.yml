@@ -15,7 +15,7 @@ matrix:
     ##########################################################################
     # Generate the documentation
     ##########################################################################
-    - env: DOCUMENTATION=true COMPILER=default
+    - env: DOCUMENTATION=true COMPILER=default CMAKE_OPTIONS="-DUMLAUT_ENABLE_TESTS=OFF"
       addons: *defaults
 
 install:
