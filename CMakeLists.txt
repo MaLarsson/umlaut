@@ -3,7 +3,7 @@
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.5)
-project(umlaut)
+project(Umlaut VERSION 0.1.0)
 
 # Compiler flags
 set(CMAKE_CXX_STANDARD 17)
@@ -19,9 +19,50 @@ else()
   add_compile_options("-Wextra")
 endif()
 
-# Add umlaut library
-add_library(umlaut INTERFACE)
-target_include_directories(umlaut INTERFACE include)
+# Add Umlaut library
+add_library(Umlaut INTERFACE)
+add_library(Umlaut::Umlaut ALIAS Umlaut)
+
+target_include_directories(Umlaut INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+# Add install target
+include(GNUInstallDirs)
+
+set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${version_config}"
+  COMPATIBILITY SameMajorVersion)
+
+configure_package_config_file(
+  "cmake/Config.cmake.in"
+  "${project_config}"
+  INSTALL_DESTINATION "${config_install_dir}")
+
+install(TARGETS Umlaut
+  EXPORT "${TARGETS_EXPORT_NAME}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+install(DIRECTORY "include/"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  FILES_MATCHING PATTERN "*.hpp")
+
+install(FILES "${project_config}" "${version_config}"
+  DESTINATION "${config_install_dir}")
+
+install(EXPORT "${TARGETS_EXPORT_NAME}"
+  NAMESPACE "${PROJECT_NAME}::"
+  DESTINATION "${config_install_dir}")
 
 # Download and unpack googletest at configure time
 configure_file(cmake/googletest.cmake.in googletest-download/CMakeLists.txt)
@@ -58,7 +99,7 @@ add_executable(umlaut_test EXCLUDE_FROM_ALL
   test/compressed_pair.cpp
   test/small_vector.cpp)
 
-target_link_libraries(umlaut_test umlaut gtest_main)
+target_link_libraries(umlaut_test Umlaut::Umlaut gtest_main)
 
 add_test(all_tests umlaut_test)
 
