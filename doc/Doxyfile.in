@@ -7,17 +7,17 @@ PROJECT_BRIEF           = "C++17 Generic Template Library"
 PROJECT_LOGO            =
 PROJECT_NUMBER          = @umlaut_VERSION_STRING@
 
-STRIP_FROM_PATH         = @umlaut_SOURCE_DIR@/include
+STRIP_FROM_PATH         = @CMAKE_CURRENT_SOURCE_DIR@/include
 BUILTIN_STL_SUPPORT     = NO
-STRIP_FROM_INC_PATH     = @umlaut_SOURCE_DIR@/include
+STRIP_FROM_INC_PATH     = @CMAKE_CURRENT_SOURCE_DIR@/include
 ALIASES                 =
 ENABLED_SECTIONS        =
 QUIET                   = YES
 
 # Resources
 OUTPUT_DIRECTORY        = @CMAKE_CURRENT_BINARY_DIR@
-INPUT                   = @umlaut_SOURCE_DIR@/include \
-                          @umlaut_SOURCE_DIR@/doc/tutorial.hpp
+INPUT                   = @CMAKE_CURRENT_SOURCE_DIR@/include \
+                          @CMAKE_CURRENT_SOURCE_DIR@/doc/tutorial.hpp
 FILE_PATTERNS           = *.hpp
 RECURSIVE               = YES
 EXCLUDE                 =
@@ -54,7 +54,7 @@ GENERATE_DEPRECATEDLIST = YES
 SHOW_USED_FILES         = NO
 SHOW_FILES              = YES
 SHOW_NAMESPACES         = YES
-LAYOUT_FILE             = @umlaut_SOURCE_DIR@/doc/layout.xml
+LAYOUT_FILE             = @CMAKE_CURRENT_SOURCE_DIR@/doc/layout.xml
 
 CLASS_DIAGRAMS          = YES
 HAVE_DOT                = NO
@@ -83,7 +83,7 @@ ENABLE_PREPROCESSING    = YES
 MACRO_EXPANSION         = YES
 EXPAND_ONLY_PREDEF      = NO
 SEARCH_INCLUDES         = YES
-INCLUDE_PATH            = @umlaut_SOURCE_DIR@/include
+INCLUDE_PATH            = @CMAKE_CURRENT_SOURCE_DIR@/include
 INCLUDE_FILE_PATTERNS   =
 PREDEFINED              = UMLAUT_DOXYGEN_INVOKED
 SKIP_FUNCTION_MACROS    = NO
