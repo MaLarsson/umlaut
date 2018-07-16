@@ -9,6 +9,9 @@
 
 #include <type_traits>
 
+#if defined(__has_builtin) && __has_builtin(__type_pack_element)
+#define UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC
+#endif
 
 namespace umlaut::detail {
 
@@ -30,9 +33,13 @@ namespace umlaut {
 
 /// @brief Traits class for parameter pack indexing.
 template <std::size_t I, typename ...Ts>
-using nth_element = typename decltype(detail::select<I>(
+#if (UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC)
+using pack_element_t = __type_pack_element<n, T...>;
+#else
+using pack_element_t = typename decltype(detail::select<I>(
     detail::indexer<std::index_sequence_for<Ts...>, Ts...>{}
 ))::type;
+#endif
 
 /// @brief Traits class used to check whether type T can be "optimized away" using EBO.
 template <typename T>

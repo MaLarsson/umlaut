@@ -47,7 +47,7 @@ public:
 
     /// @brief Constructs the `vector` from a list of values.
     template <typename ...Ts, typename = std::enable_if_t<
-        !std::is_same_v<std::decay_t<nth_element<0, Ts&&...>>, allocator_type>
+        !std::is_same_v<std::decay_t<pack_element_t<0, Ts...>>, allocator_type>
     >>
     small_vector_base(list_construct_t, Ts&&... values)
 	: small_vector_base(list_construct, allocator_type{}, std::forward<Ts>(values)...) {}
@@ -60,7 +60,7 @@ public:
     }
 
     template <typename ...Tuples, typename = std::enable_if_t<
-        !std::is_same_v<std::decay_t<nth_element<0, Tuples&&...>>, allocator_type>
+        !std::is_same_v<std::decay_t<pack_element_t<0, Tuples...>>, allocator_type>
     >>
     small_vector_base(std::piecewise_construct_t, Tuples&&... tuples)
 	: small_vector_base(std::piecewise_construct, allocator_type{}, std::forward<Tuples>(tuples)...) {}
