@@ -85,7 +85,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">traits.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -99,6 +100,14 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structumlaut_1_1is__empty__base__optimizable.html">umlaut::is_empty_base_optimizable&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traits class used to check whether type T can be "optimized away" using EBO.  <a href="structumlaut_1_1is__empty__base__optimizable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a07ddd46f4f9bed9c5d3613773e1df435"><td class="memTemplParams" colspan="2"><a class="anchor" id="a07ddd46f4f9bed9c5d3613773e1df435"></a>
+template&lt;std::size_t I, typename... Ts&gt; </td></tr>
+<tr class="memitem:a07ddd46f4f9bed9c5d3613773e1df435"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="traits_8hpp.html#a07ddd46f4f9bed9c5d3613773e1df435">umlaut::nth_element</a> = typename decltype(detail::select&lt; I &gt;(detail::indexer&lt; std::index_sequence_for&lt; Ts... &gt;, Ts... &gt;{}))::type</td></tr>
+<tr class="memdesc:a07ddd46f4f9bed9c5d3613773e1df435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traits class for parameter pack indexing. <br /></td></tr>
+<tr class="separator:a07ddd46f4f9bed9c5d3613773e1df435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines common type traits. </p>
