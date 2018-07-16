@@ -9,7 +9,30 @@
 
 #include <type_traits>
 
+
+namespace umlaut::detail {
+
+template <std::size_t I, typename T>
+struct indexed { using type = T; };
+
+template <typename Is, typename ...Ts>
+struct indexer;
+
+template <std::size_t ...Is, typename ...Ts>
+struct indexer<std::index_sequence<Is...>, Ts...> : indexed<Is, Ts>... {};
+
+template <std::size_t I, typename T>
+static indexed<I, T> select(indexed<I, T>);
+
+} // namespace umlaut::detail
+
 namespace umlaut {
+
+/// @brief Traits class for parameter pack indexing.
+template <std::size_t I, typename ...Ts>
+using nth_element = typename decltype(detail::select<I>(
+    detail::indexer<std::index_sequence_for<Ts...>, Ts...>{}
+))::type;
 
 /// @brief Traits class used to check whether type T can be "optimized away" using EBO.
 template <typename T>
