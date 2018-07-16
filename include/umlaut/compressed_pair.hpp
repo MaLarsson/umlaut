@@ -24,13 +24,8 @@ struct compressed_element {
     constexpr compressed_element(U&& value)
 	: m_value(std::forward<U>(value)) {}
 
-    constexpr value_type& get_value() {
-	return m_value;
-    }
-
-    constexpr const value_type& get_value() const {
-	return m_value;
-    }
+    constexpr value_type& get_value() { return m_value; }
+    constexpr const value_type& get_value() const { return m_value; }
 
  private:
     value_type m_value;
@@ -46,13 +41,8 @@ struct compressed_element<T, Index, true> : T {
     constexpr compressed_element(U&& value)
 	: value_type(std::forward<U>(value)) {}
 
-    constexpr value_type& get_value() {
-	return *this;
-    }
-
-    constexpr const value_type& get_value() const {
-	return *this;
-    }
+    constexpr value_type& get_value() { return *this; }
+    constexpr const value_type& get_value() const { return *this; }
 };
 
 } // namespace umlaut::detail
@@ -76,13 +66,15 @@ class compressed_pair : private detail::compressed_element<First, 0>,
     /// @brief Default constructs the `compressed_pair`.
     constexpr compressed_pair() : Base1(), Base2() {}
 
-    /// @brief TODO ...
+    /// @brief Constructs the `compressed_pair` from first and second.
+    ///
+    /// Forward the first and second arguments to the cope/move constructor of the
+    /// first and second element respectivly.
     template <typename T = First, typename U = Second>
     constexpr compressed_pair(T&& first, U&& second)
-	: Base1(std::forward<T>(first)),
-	  Base2(std::forward<U>(second)) {}
+	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
 
-    /// @brief TODO ...
+    /// @brief Returns the value of the first element.
     constexpr first_type& first() {
 	return static_cast<Base1&>(*this).get_value();
     }
@@ -92,7 +84,7 @@ class compressed_pair : private detail::compressed_element<First, 0>,
 	return static_cast<const Base1&>(*this).get_value();
     }
 
-    /// @brief TODO ...
+    /// @brief Returns the value of the second element.
     constexpr second_type& second() {
 	return static_cast<Base2&>(*this).get_value();
     }
