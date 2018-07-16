@@ -33,7 +33,7 @@ namespace umlaut {
 
 /// @brief Traits class for parameter pack indexing.
 template <std::size_t I, typename ...Ts>
-#if (UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC)
+#if defined(UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC)
 using pack_element_t = __type_pack_element<n, T...>;
 #else
 using pack_element_t = typename decltype(detail::select<I>(
