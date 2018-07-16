@@ -9,8 +9,10 @@
 
 #include <type_traits>
 
-#if defined(__has_builtin) && __has_builtin(__type_pack_element)
+#if defined(__has_builtin)
+#if __has_builtin(__type_pack_element)
 #define UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC
+#endif
 #endif
 
 namespace umlaut::detail {
@@ -25,7 +27,7 @@ template <std::size_t ...Is, typename ...Ts>
 struct indexer<std::index_sequence<Is...>, Ts...> : indexed<Is, Ts>... {};
 
 template <std::size_t I, typename T>
-static indexed<I, T> select(indexed<I, T>);
+[[maybe_unused]] static indexed<I, T> select(indexed<I, T>);
 
 } // namespace umlaut::detail
 
