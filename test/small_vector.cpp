@@ -15,6 +15,15 @@ TEST(smallVectorBase, listInitialization) {
     EXPECT_EQ(v[2], 3);
 }
 
+TEST(smallVectorBase, listInitializationAlloc) {
+    std::allocator<int> alloc;
+    umlaut::small_vector_base<int> v(umlaut::list_construct, alloc, 1 , 2, 3);
+
+    EXPECT_EQ(v[0], 1);
+    EXPECT_EQ(v[1], 2);
+    EXPECT_EQ(v[2], 3);
+}
+
 TEST(smallVectorBase, piecewiseConstuct) {
     struct type {
 	type(int i, int j) : m_i(i), m_j(j) {}
