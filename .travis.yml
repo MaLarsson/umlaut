@@ -12,6 +12,15 @@ matrix:
     - env: UNIT_TESTS=true COMPILER=clang++-5.0
       addons: &defaults { apt: { packages: ["clang-5.0", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
 
+    # GCC 7
+    - env: UNIT_TESTS=true COMPILER=g++-7
+      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    # Xcode 9.1
+    - os: osx
+      env: UNIT_TESTS=true
+      osx_image: xcode9.1
+
     ##########################################################################
     # Generate the documentation
     ##########################################################################
