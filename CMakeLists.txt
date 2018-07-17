@@ -8,11 +8,6 @@ project(Umlaut VERSION 0.1.0)
 # Config options
 option(UMLAUT_ENABLE_TESTS "Enable building the unit tests which depend on gtest" ON)
 
-# Compiler flags
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
-
 # Compiler warnings
 if (MSVC)
   add_compile_options("/W4")
@@ -23,8 +18,12 @@ else()
 endif()
 
 # Add Umlaut library
+include(CheckCXXCompilerFlag)
+
 add_library(Umlaut INTERFACE)
 add_library(Umlaut::Umlaut ALIAS Umlaut)
+
+target_compile_features(Umlaut INTERFACE cxx_std_17)
 
 target_include_directories(Umlaut INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
