@@ -139,7 +139,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_iterat
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aac5f032a701683ec022e0a0d486e5ff8"><td class="memTemplParams" colspan="2"><a class="anchor" id="aac5f032a701683ec022e0a0d486e5ff8"></a>
-template&lt;typename... Ts, typename  = std::enable_if_t&lt;        !std::is_same_v&lt;std::decay_t&lt;pack_element_t&lt;0, Ts...&gt;&gt;, allocator_type&gt;    &gt;&gt; </td></tr>
+template&lt;typename... Ts, typename  = std::enable_if_t&lt;        !std::is_same_v&lt;remove_cvref_t&lt;pack_element_t&lt;0, Ts...&gt;&gt;, allocator_type&gt;    &gt;&gt; </td></tr>
 <tr class="memitem:aac5f032a701683ec022e0a0d486e5ff8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classumlaut_1_1small__vector__base.html#aac5f032a701683ec022e0a0d486e5ff8">small_vector_base</a> (<a class="el" href="structumlaut_1_1list__construct__t.html">list_construct_t</a>, Ts &amp;&amp;...values)</td></tr>
 <tr class="memdesc:aac5f032a701683ec022e0a0d486e5ff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the <code>vector</code> from a list of values. <br /></td></tr>
 <tr class="separator:aac5f032a701683ec022e0a0d486e5ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
