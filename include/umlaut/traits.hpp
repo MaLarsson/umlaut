@@ -62,4 +62,44 @@ struct remove_cvref { using type = std::remove_cv_t<std::remove_reference_t<T>>;
 template <typename T>
 using remove_cvref_t = typename remove_cvref<T>::type;
 
+/// @brief Traits class used to determine if an iterator is contigous or not.
+template <typename T>
+struct is_contiguous_iterator : std::is_pointer<T> {};
+
+/// @relates is_contiguous_iterator
+template <typename T>
+inline constexpr bool is_contiguous_iterator_v = is_contiguous_iterator<T>::value;
+
+/// @brief Traits class used a determine priority of f.e. overloads.
+template <std::size_t N>
+struct priority_tag : priority_tag<N-1> {};
+
+template <>
+struct priority_tag<0> {};
+
+} // namespace umlaut
+
+namespace umlaut::detail {
+
+template <typename T>
+auto itr_helper(priority_tag<1>) -> std::bool_constant<T::is_trivially_relocatable::value>;
+
+template <typename T>
+auto itr_helper(priority_tag<0>) -> std::bool_constant<
+    std::is_trivially_move_constructible_v<T> &&
+    std::is_trivially_destructible_v<T>
+>;
+
+} // namespace umlaut::detail
+
+namespace umlaut {
+
+/// @brief Traits class used to determine if a type T is trivially relocatable.
+template <typename T>
+struct is_trivially_relocatable : decltype(detail::itr_helper<T>(priority_tag<1>{})) {};
+
+/// @relates is_trivially_relocatable
+template <typename T>
+inline constexpr bool is_trivially_relocatable_v = is_trivially_relocatable<T>::value;
+
 } // namespace umlaut
