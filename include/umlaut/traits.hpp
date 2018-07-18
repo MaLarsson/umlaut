@@ -43,6 +43,7 @@ using pack_element_t = typename decltype(detail::select<I>(
 ))::type;
 #endif
 
+
 /// @brief Traits class used to check whether type T can be "optimized away" using EBO.
 template <typename T>
 struct is_empty_base_optimizable : std::conjunction<
@@ -54,6 +55,7 @@ struct is_empty_base_optimizable : std::conjunction<
 template <typename T>
 inline constexpr bool is_empty_base_optimizable_v = is_empty_base_optimizable<T>::value;
 
+
 /// @brief Traits class used to remove cv-qualifiers and reference.
 template <typename T>
 struct remove_cvref { using type = std::remove_cv_t<std::remove_reference_t<T>>; };
@@ -62,6 +64,7 @@ struct remove_cvref { using type = std::remove_cv_t<std::remove_reference_t<T>>;
 template <typename T>
 using remove_cvref_t = typename remove_cvref<T>::type;
 
+
 /// @brief Traits class used to determine if an iterator is contigous or not.
 template <typename T>
 struct is_contiguous_iterator : std::is_pointer<T> {};
@@ -69,6 +72,7 @@ struct is_contiguous_iterator : std::is_pointer<T> {};
 /// @relates is_contiguous_iterator
 template <typename T>
 inline constexpr bool is_contiguous_iterator_v = is_contiguous_iterator<T>::value;
+
 
 /// @brief Traits class used a determine priority of f.e. overloads.
 template <std::size_t N>
