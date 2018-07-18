@@ -54,4 +54,12 @@ struct is_empty_base_optimizable : std::conjunction<
 template <typename T>
 inline constexpr bool is_empty_base_optimizable_v = is_empty_base_optimizable<T>::value;
 
+/// @brief Traits class used to remove cv-qualifiers and reference.
+template <typename T>
+struct remove_cvref { using type = std::remove_cv_t<std::remove_reference_t<T>>; };
+
+/// @relates remove_cvref
+template <typename T>
+using remove_cvref_t = typename remove_cvref<T>::type;
+
 } // namespace umlaut
