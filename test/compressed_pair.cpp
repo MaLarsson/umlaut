@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <umlaut.hpp>
+#include <umlaut/compressed_pair.hpp>
 #include <string>
 
 namespace {

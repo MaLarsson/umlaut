@@ -8,6 +8,7 @@
 #pragma once
 
 #include <type_traits>
+#include <cstddef>
 
 #if defined(__has_builtin)
 #if __has_builtin(__type_pack_element)
