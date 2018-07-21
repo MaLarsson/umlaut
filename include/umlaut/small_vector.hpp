@@ -23,13 +23,13 @@ namespace umlaut {
 /// Generic container.
 template <typename T, typename Alloc = std::allocator<T>>
 class small_vector_base {
-    using alloc_traits = typename std::allocator_traits<Alloc>::template rebind_traits<T>;
+    using alloc_traits = std::allocator_traits<Alloc>;
 
 public:
     /// @name Aliases
     /// @{
     using value_type = T;
-    using allocator_type = typename alloc_traits::allocator_type;
+    using allocator_type = Alloc;
     using size_type = typename alloc_traits::size_type;
     using difference_type = typename alloc_traits::difference_type;
     using reference = value_type&;
