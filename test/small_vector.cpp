@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <umlaut.hpp>
+#include <umlaut/small_vector.hpp>
 
 namespace {
 
@@ -31,6 +31,18 @@ TEST(smallVectorBase, piecewiseConstuct) {
     };
 
     umlaut::small_vector_base<type> v(std::piecewise_construct,
+				      std::forward_as_tuple(1, 2),
+				      std::forward_as_tuple(3, 4));
+}
+
+TEST(smallVectorBase, piecewiseConstuctAlloc) {
+    struct type {
+	type(int i, int j) : m_i(i), m_j(j) {}
+	int m_i, m_j;
+    };
+
+    std::allocator<type> alloc;
+    umlaut::small_vector_base<type> v(std::piecewise_construct, alloc,
 				      std::forward_as_tuple(1, 2),
 				      std::forward_as_tuple(3, 4));
 }
