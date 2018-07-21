@@ -7,13 +7,13 @@
 
 #pragma once
 
+#include "config.hpp"
+
 #include <type_traits>
 #include <cstddef>
 
-#if defined(__has_builtin)
-#if __has_builtin(__type_pack_element)
+#if UMLAUT_HAS_BUILTIN(__type_pack_element)
 #define UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC
-#endif
 #endif
 
 namespace umlaut::detail {
