@@ -14,7 +14,7 @@
 #endif
 
 #if UMLAUT_HAS_BUILTIN(__builtin_expect)
-#define UMLAUT_UNLIKELY(x) (__builtin_expect(x, 0))
+#define UMLAUT_UNLIKELY(x) (__builtin_expect(!!(x), 0))
 #define UMLAUT_LIKELY(x) (__builtin_expect(!!(x), 1))
 #else
 #define UMLAUT_UNLIKELY(x) (x)
