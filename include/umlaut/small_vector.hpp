@@ -177,11 +177,11 @@ public:
     size_type m_size = 0;
     size_type m_capacity = 0;
 
-    pointer& m_data() noexcept { return m_data_and_alloc.first(); }
-    const_pointer& m_data() const noexcept { return m_data_and_alloc.first(); }
+    constexpr pointer& m_data() noexcept { return m_data_and_alloc.first(); }
+    constexpr const_pointer& m_data() const noexcept { return m_data_and_alloc.first(); }
 
-    allocator_type& m_alloc() noexcept { return m_data_and_alloc.second(); }
-    const allocator_type& m_alloc() const noexcept { return m_data_and_alloc.second(); }
+    constexpr allocator_type& m_alloc() noexcept { return m_data_and_alloc.second(); }
+    constexpr const allocator_type& m_alloc() const noexcept { return m_data_and_alloc.second(); }
 };
 
 } // namespace umlaut
