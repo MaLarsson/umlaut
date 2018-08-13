@@ -142,9 +142,9 @@ public:
     /// @name Capacity
     /// @{
     void reserve(size_type new_cap) {
-        if (new_cap > max_size()) {
-            throw std::length_error("reserve");
-        }
+	if (new_cap > max_size()) {
+	    throw std::length_error("reserve");
+	}
 	else if (new_cap > capacity()) {
 	    auto new_data = alloc_traits::allocate(m_alloc(), new_cap);
 
