@@ -63,7 +63,8 @@ public:
         !std::is_same_v<remove_cvref_t<pack_element_t<0, Tuples...>>, allocator_type>
     >>
     small_vector_base(std::piecewise_construct_t, Tuples&&... tuples)
-	: small_vector_base(std::piecewise_construct, allocator_type{}, std::forward<Tuples>(tuples)...) {}
+	: small_vector_base(std::piecewise_construct, allocator_type{},
+			    std::forward<Tuples>(tuples)...) {}
 
     template <typename ...Tuples>
     small_vector_base(std::piecewise_construct_t, const allocator_type& alloc, Tuples&&... tuples)
@@ -141,8 +142,13 @@ public:
 
     /// @name Capacity
     /// @{
+
+    /// @brief Increase the capacity of the vector to be greater or equal to `new_cap`.
+    ///
+    /// @param new_cap New capacity of the vector.
+    /// @throws std::length_error if `new_cap > max_size()`.
     void reserve(size_type new_cap) {
-	if (new_cap > max_size()) {
+	if (UMLAUT_UNLIKELY(new_cap > max_size())) {
 	    throw std::length_error("reserve");
 	}
 	else if (new_cap > capacity()) {
