@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['umlaut_2ehpp',['umlaut.hpp',['../umlaut_8hpp.html',1,'']]]
+  ['tags_2ehpp',['tags.hpp',['../tags_8hpp.html',1,'']]],
+  ['traits_2ehpp',['traits.hpp',['../traits_8hpp.html',1,'']]]
 ];
