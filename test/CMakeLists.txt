@@ -31,6 +31,7 @@ enable_testing()
 
 add_executable(umlaut_test EXCLUDE_FROM_ALL
   compressed_pair.cpp
+  optional.cpp
   small_vector.cpp)
 
 target_link_libraries(umlaut_test Umlaut::Umlaut gtest_main)

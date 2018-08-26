@@ -9,6 +9,7 @@
 
 #include "umlaut/config.hpp"
 #include "umlaut/compressed_pair.hpp"
+#include "umlaut/optional.hpp"
 #include "umlaut/small_vector.hpp"
 #include "umlaut/tags.hpp"
 #include "umlaut/traits.hpp"
