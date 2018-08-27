@@ -11,9 +11,16 @@
 #include <type_traits>
 #include <utility>
 #include <memory>
-#include <optional>
+#include <exception>
 
 namespace umlaut {
+
+class bad_optional_access : public std::exception {
+ public:
+    bad_optional_access() = default;
+    const char* what() const noexcept override { return "Optional has no value"; }
+};
+
 namespace detail {
 
 template <typename T, bool = std::is_trivially_destructible_v<T>>
@@ -93,28 +100,28 @@ class optional : private detail::optional_common_base<T> {
 	if (has_value())
 	    return this->m_value;
 
-	throw std::bad_optional_access{};
+	throw bad_optional_access{};
     }
 
     constexpr value_type& value() && {
 	if (has_value())
 	    return std::move(this->m_value);
 
-	throw std::bad_optional_access{};
+	throw bad_optional_access{};
     }
 
     constexpr const value_type& value() const & {
 	if (has_value())
 	    return this->m_value;
 
-	throw std::bad_optional_access{};
+	throw bad_optional_access{};
     }
 
     constexpr const value_type& value() const && {
 	if (has_value())
 	    return std::move(this->m_value);
 
-	throw std::bad_optional_access{};
+	throw bad_optional_access{};
     }
 };
 
