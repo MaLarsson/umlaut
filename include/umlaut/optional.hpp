@@ -39,8 +39,9 @@ struct optional_maybe_dtor {
 	}
     }
 
+    struct empty_byte {};
     union {
-	std::byte m_dummy;
+	empty_byte m_dummy;
 	T m_value;
     };
 
@@ -56,8 +57,9 @@ struct optional_maybe_dtor<T, true> {
     constexpr optional_maybe_dtor(std::in_place_t, Args&&... args)
 	: m_value(std::forward<Args>(args)...), m_has_value(true) {}
 
+    struct empty_byte {};
     union {
-	std::byte m_dummy;
+	empty_byte m_dummy;
 	T m_value;
     };
 
