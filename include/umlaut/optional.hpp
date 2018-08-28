@@ -83,14 +83,14 @@ struct optional_common_base : optional_maybe_dtor<T> {
 
 template <typename T>
 using optional_delete_ctor_base = delete_ctor_base<
-    // TODO ...
-    false, false
+    std::is_copy_constructible_v<T>,
+    std::is_move_constructible_v<T>
 >;
 
 template <typename T>
 using optional_delete_assign_base = delete_assign_base<
-    // TODO ...
-    false, false
+    std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T>,
+    std::is_move_constructible_v<T> && std::is_move_assignable_v<T>
 >;
 
 } // namespace detail
@@ -105,6 +105,12 @@ class optional : private detail::optional_common_base<T>,
     using value_type = T;
 
     constexpr optional() noexcept = default;
+
+    constexpr optional(const optional& rhs) = default;
+    constexpr optional(optional&& rhs) = default;
+
+    optional& operator=(const optional& rhs) = default;
+    optional& operator=(optional&& rhs) = default;
 
     template <typename ...Args>
     constexpr optional(std::in_place_t, Args&&... args)
@@ -121,7 +127,7 @@ class optional : private detail::optional_common_base<T>,
 	throw bad_optional_access{};
     }
 
-    constexpr value_type& value() && {
+    constexpr value_type&& value() && {
 	if (has_value())
 	    return std::move(this->m_value);
 
@@ -135,7 +141,7 @@ class optional : private detail::optional_common_base<T>,
 	throw bad_optional_access{};
     }
 
-    constexpr const value_type& value() const && {
+    constexpr const value_type&& value() const && {
 	if (has_value())
 	    return std::move(this->m_value);
 

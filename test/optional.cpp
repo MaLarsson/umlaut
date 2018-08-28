@@ -28,4 +28,52 @@ TEST(optional, hasValue) {
     EXPECT_FALSE(non_initialized.has_value());
 }
 
+TEST(optional, propagateCopyConstruction) {
+    struct copyable_type {
+	copyable_type() = default;
+	copyable_type(const copyable_type&) = default;
+	copyable_type(copyable_type&&) noexcept = default;
+	copyable_type& operator=(const copyable_type&) = default;
+	copyable_type& operator=(copyable_type&&) noexcept = default;
+    };
+
+    struct non_copyable_type {
+	non_copyable_type() = default;
+	non_copyable_type(const non_copyable_type&) = delete;
+	non_copyable_type(non_copyable_type&&) noexcept = default;
+	non_copyable_type& operator=(const non_copyable_type&) = default;
+	non_copyable_type& operator=(non_copyable_type&&) noexcept = default;
+    };
+
+    umlaut::optional<copyable_type> copyable;
+    umlaut::optional<non_copyable_type> non_copyable;
+
+    EXPECT_TRUE(std::is_copy_constructible_v<decltype(copyable)>);
+    EXPECT_FALSE(std::is_copy_constructible_v<decltype(non_copyable)>);
+}
+
+TEST(optional, propagateMoveConstruction) {
+    struct movable_type {
+	movable_type() = default;
+	movable_type(const movable_type&) = default;
+	movable_type(movable_type&&) noexcept = default;
+	movable_type& operator=(const movable_type&) = default;
+	movable_type& operator=(movable_type&&) noexcept = default;
+    };
+
+    struct non_movable_type {
+	non_movable_type() = default;
+	non_movable_type(const non_movable_type&) = delete;
+	non_movable_type(non_movable_type&&) noexcept = delete;
+	non_movable_type& operator=(const non_movable_type&) = default;
+	non_movable_type& operator=(non_movable_type&&) noexcept = default;
+    };
+
+    umlaut::optional<movable_type> movable;
+    umlaut::optional<non_movable_type> non_movable;
+
+    EXPECT_TRUE(std::is_move_constructible_v<decltype(movable)>);
+    EXPECT_FALSE(std::is_move_constructible_v<decltype(non_movable)>);
+}
+
 } // namespace
