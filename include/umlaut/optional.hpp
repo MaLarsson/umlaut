@@ -14,8 +14,16 @@
 #include <utility>
 #include <memory>
 #include <exception>
+#include <functional>
 
 namespace umlaut {
+
+struct nullopt_t {
+  struct do_not_use {};
+  constexpr explicit nullopt_t(do_not_use) noexcept {}
+};
+
+inline constexpr nullopt_t nullopt{nullopt_t::do_not_use{}};
 
 class bad_optional_access : public std::exception {
  public:
@@ -93,6 +101,28 @@ using optional_delete_assign_base = delete_assign_base<
     std::is_move_constructible_v<T> && std::is_move_assignable_v<T>
 >;
 
+
+
+
+// temporary invoke_result_t
+template <typename F, typename, typename... Args> struct invoke_result_impl;
+
+template <typename F, typename... Args>
+struct invoke_result_impl<
+    F, decltype(std::invoke(std::declval<F>(), std::declval<Args>()...), void()),
+    Args...> {
+    using type = decltype(std::invoke(std::declval<F>(), std::declval<Args>()...));
+};
+
+template <typename F, typename... Args>
+using invoke_result = invoke_result_impl<F, void, Args...>;
+
+template <typename F, typename... Args>
+using invoke_result_t = typename invoke_result<F, Args...>::type;
+
+
+
+
 } // namespace detail
 
 template <typename T>
@@ -105,6 +135,8 @@ class optional : private detail::optional_common_base<T>,
     using value_type = T;
 
     constexpr optional() noexcept = default;
+
+    constexpr optional(nullopt_t) noexcept {}
 
     constexpr optional(const optional& rhs) = default;
     constexpr optional(optional&& rhs) = default;
@@ -146,6 +178,46 @@ class optional : private detail::optional_common_base<T>,
 	    return std::move(this->m_value);
 
 	throw bad_optional_access{};
+    }
+
+    template <typename F>
+    constexpr auto then(F&& f) & {
+	using result = detail::invoke_result_t<F, T&>;
+
+	if (has_value())
+	    return std::invoke(std::forward<F>(f), this->m_value);
+
+	return result(nullopt);
+    }
+
+    template <typename F>
+    constexpr auto then(F&& f) && {
+	using result = detail::invoke_result_t<F, T&&>;
+
+	if (has_value())
+	    return std::invoke(std::forward<F>(f), std::move(this->m_value));
+
+	return result(nullopt);
+    }
+
+    template <typename F>
+    constexpr auto then(F&& f) const & {
+	using result = detail::invoke_result_t<F, const T&>;
+
+	if (has_value())
+	    return std::invoke(std::forward<F>(f), this->m_value);
+
+	return result(nullopt);
+    }
+
+    template <typename F>
+    constexpr auto then(F&& f) const && {
+	using result = detail::invoke_result_t<F, const T&>;
+
+	if (has_value())
+	    return std::invoke(std::forward<F>(f), std::move(this->m_value));
+
+	return result(nullopt);
     }
 };
 

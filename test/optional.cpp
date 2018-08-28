@@ -73,7 +73,28 @@ TEST(optional, propagateMoveConstruction) {
     umlaut::optional<non_movable_type> non_movable;
 
     EXPECT_TRUE(std::is_move_constructible_v<decltype(movable)>);
+    EXPECT_TRUE(std::is_nothrow_move_constructible_v<decltype(movable)>);
     EXPECT_FALSE(std::is_move_constructible_v<decltype(non_movable)>);
+}
+
+TEST(optional, then) {
+    auto get_optional = []() ->umlaut::optional<int> {
+	return { std::in_place, 1 };
+    };
+
+    auto add_five = [](auto&& value) ->umlaut::optional<int> {
+	return { std::in_place, value + 5 };
+    };
+
+    auto add_ten = [](auto&& value) ->umlaut::optional<int> {
+	return { std::in_place, value + 10 };
+    };
+
+    auto result = get_optional()
+	.then(add_five)
+	.then(add_ten);
+
+    EXPECT_EQ(result.value(), 16);
 }
 
 } // namespace
