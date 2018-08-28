@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "special_members.hpp"
+
 #include <cstddef>
 #include <type_traits>
 #include <utility>
@@ -79,10 +81,24 @@ struct optional_common_base : optional_maybe_dtor<T> {
     constexpr bool has_value() const noexcept { return this->m_has_value; }
 };
 
+template <typename T>
+using optional_delete_ctor_base = delete_ctor_base<
+    // TODO ...
+    false, false
+>;
+
+template <typename T>
+using optional_delete_assign_base = delete_assign_base<
+    // TODO ...
+    false, false
+>;
+
 } // namespace detail
 
 template <typename T>
-class optional : private detail::optional_common_base<T> {
+class optional : private detail::optional_common_base<T>,
+		 private detail::optional_delete_ctor_base<T>,
+		 private detail::optional_delete_assign_base<T> {
     using base = detail::optional_common_base<T>;
 
  public:
