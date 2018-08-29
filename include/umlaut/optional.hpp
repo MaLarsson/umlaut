@@ -202,42 +202,74 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) & {
-	using result = detail::invoke_result_t<F, T&>;
+	using result_t = detail::invoke_result_t<F, T&>;
 
-	if (has_value())
-	    return std::invoke(std::forward<F>(f), this->m_value);
+	if constexpr (is_optional_v<result_t>) {
+	    if (has_value())
+	      return std::invoke(std::forward<F>(f), this->m_value);
 
-	return result(nullopt);
+	    return result_t(nullopt);
+	}
+	else {
+	    if (has_value())
+	      return optional<result_t>(std::invoke(std::forward<F>(f), this->m_value));
+
+	    return optional<result_t>(nullopt);
+	}
     }
 
     template <typename F>
     constexpr auto then(F&& f) && {
-	using result = detail::invoke_result_t<F, T&&>;
+	using result_t = detail::invoke_result_t<F, T&&>;
 
-	if (has_value())
-	    return std::invoke(std::forward<F>(f), std::move(this->m_value));
+	if constexpr (is_optional_v<result_t>) {
+	    if (has_value())
+	      return std::invoke(std::forward<F>(f), std::move(this->m_value));
 
-	return result(nullopt);
+	    return result_t(nullopt);
+	}
+	else {
+	    if (has_value())
+	      return optional<result_t>(std::invoke(std::forward<F>(f), std::move(this->m_value)));
+
+	    return optional<result_t>(nullopt);
+	}
     }
 
     template <typename F>
     constexpr auto then(F&& f) const & {
-	using result = detail::invoke_result_t<F, const T&>;
+	using result_t = detail::invoke_result_t<F, const T&>;
 
-	if (has_value())
-	    return std::invoke(std::forward<F>(f), this->m_value);
+	if constexpr (is_optional_v<result_t>) {
+	    if (has_value())
+	      return std::invoke(std::forward<F>(f), this->m_value);
 
-	return result(nullopt);
+	    return result_t(nullopt);
+	}
+	else {
+	    if (has_value())
+	      return optional<result_t>(std::invoke(std::forward<F>(f), this->m_value));
+
+	    return optional<result_t>(nullopt);
+	}
     }
 
     template <typename F>
     constexpr auto then(F&& f) const && {
-	using result = detail::invoke_result_t<F, const T&>;
+	using result_t = detail::invoke_result_t<F, const T&>;
 
-	if (has_value())
-	    return std::invoke(std::forward<F>(f), std::move(this->m_value));
+	if constexpr (is_optional_v<result_t>) {
+	    if (has_value())
+	      return std::invoke(std::forward<F>(f), std::move(this->m_value));
 
-	return result(nullopt);
+	    return result_t(nullopt);
+	}
+	else {
+	    if (has_value())
+	      return optional<result_t>(std::invoke(std::forward<F>(f), std::move(this->m_value)));
+
+	    return optional<result_t>(nullopt);
+	}
     }
 };
 
