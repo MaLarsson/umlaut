@@ -39,8 +39,8 @@ template <typename T>
 inline constexpr bool is_optional_v = is_optional<T>::value;
 
 struct nullopt_t {
-  struct do_not_use {};
-  constexpr explicit nullopt_t(do_not_use) noexcept {}
+    struct do_not_use {};
+    constexpr explicit nullopt_t(do_not_use) noexcept {}
 };
 
 inline constexpr nullopt_t nullopt{nullopt_t::do_not_use{}};
@@ -121,28 +121,6 @@ using optional_delete_assign_base = delete_assign_base<
     std::is_move_constructible_v<T> && std::is_move_assignable_v<T>
 >;
 
-
-
-
-// temporary invoke_result_t
-template <typename F, typename, typename... Args> struct invoke_result_impl;
-
-template <typename F, typename... Args>
-struct invoke_result_impl<
-    F, decltype(std::invoke(std::declval<F>(), std::declval<Args>()...), void()),
-    Args...> {
-    using type = decltype(std::invoke(std::declval<F>(), std::declval<Args>()...));
-};
-
-template <typename F, typename... Args>
-using invoke_result = invoke_result_impl<F, void, Args...>;
-
-template <typename F, typename... Args>
-using invoke_result_t = typename invoke_result<F, Args...>::type;
-
-
-
-
 } // namespace detail
 
 template <typename T>
@@ -202,7 +180,7 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) & {
-	using result_t = detail::invoke_result_t<F, T&>;
+	using result_t = std::invoke_result_t<F, T&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
@@ -220,7 +198,7 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) && {
-	using result_t = detail::invoke_result_t<F, T&&>;
+	using result_t = std::invoke_result_t<F, T&&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
@@ -238,7 +216,7 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const & {
-	using result_t = detail::invoke_result_t<F, const T&>;
+	using result_t = std::invoke_result_t<F, const T&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
@@ -256,7 +234,7 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const && {
-	using result_t = detail::invoke_result_t<F, const T&>;
+	using result_t = std::invoke_result_t<F, const T&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
