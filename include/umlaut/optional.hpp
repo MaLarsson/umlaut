@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "traits.hpp"
 #include "special_members.hpp"
 
 #include <cstddef>
@@ -17,6 +18,25 @@
 #include <functional>
 
 namespace umlaut {
+
+template <typename T>
+class optional;
+
+namespace detail {
+
+template <typename T>
+struct is_optional_impl : std::false_type {};
+
+template <typename T>
+struct is_optional_impl<optional<T>> : std::true_type {};
+
+} // namespace detail
+
+template <typename T>
+using is_optional = detail::is_optional_impl<remove_cvref_t<T>>;
+
+template <typename T>
+inline constexpr bool is_optional_v = is_optional<T>::value;
 
 struct nullopt_t {
   struct do_not_use {};
