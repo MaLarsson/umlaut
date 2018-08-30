@@ -79,7 +79,7 @@ TEST(optional, propagateMoveConstruction) {
 
 int add_three(int value) { return value + 3; }
 
-TEST(optional, then) {
+TEST(optional, thenSuccess) {
     auto get_optional = []() ->umlaut::optional<int> {
 	return { std::in_place, 1 };
     };
@@ -95,6 +95,20 @@ TEST(optional, then) {
       .then(&add_three);
 
     EXPECT_EQ(result.value(), 20);
+}
+
+TEST(optional, thenFail) {
+    int initial_value = 0;
+    bool post_fail_invoked = false;
+
+    auto result = umlaut::optional<int>(std::in_place, 2)
+      .then([&](auto&& value) { initial_value = value; return value; })
+      .then([](auto&&) { return umlaut::optional<int>(umlaut::nullopt); })
+      .then([&](auto&& value) { post_fail_invoked = true; return value; });
+
+    EXPECT_FALSE(post_fail_invoked);
+    EXPECT_EQ(initial_value, 2);
+    EXPECT_FALSE(result.has_value());
 }
 
 } // namespace
