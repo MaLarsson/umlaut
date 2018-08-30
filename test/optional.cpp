@@ -77,13 +77,11 @@ TEST(optional, propagateMoveConstruction) {
     EXPECT_FALSE(std::is_move_constructible_v<decltype(non_movable)>);
 }
 
+int add_three(int value) { return value + 3; }
+
 TEST(optional, then) {
     auto get_optional = []() ->umlaut::optional<int> {
 	return { std::in_place, 1 };
-    };
-
-    auto add_five = [](auto&& value) ->umlaut::optional<int> {
-	return { std::in_place, value + 5 };
     };
 
     auto add_ten = [](auto&& value) ->umlaut::optional<int> {
@@ -91,10 +89,12 @@ TEST(optional, then) {
     };
 
     auto result = get_optional()
-	.then(add_five)
-	.then(add_ten);
+      .then([](auto&& value) ->umlaut::optional<int> { return { std::in_place, value + 5 }; })
+      .then([](auto&& value) { return value + 1; })
+      .then(add_ten)
+      .then(&add_three);
 
-    EXPECT_EQ(result.value(), 16);
+    EXPECT_EQ(result.value(), 20);
 }
 
 } // namespace
