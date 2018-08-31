@@ -249,6 +249,25 @@ class optional : private detail::optional_common_base<T>,
 	    return optional<result_t>(nullopt);
 	}
     }
+
+    template <typename F>
+    constexpr auto catch_error(F&& f) {
+	using result_t = decltype(std::forward<F>(f)());
+
+	if (has_value())
+	    return *this;
+
+	if constexpr (is_optional_v<result_t>) {
+	    return std::forward<F>(f)();
+	}
+	else if constexpr (std::is_void_v<result_t>) {
+	    std::forward<F>(f)();
+	    return *this;
+	}
+	else {
+	    return optional<result_t>(std::in_place, std::forward<F>(f)());
+	}
+    }
 };
 
 } // namespace umlaut
