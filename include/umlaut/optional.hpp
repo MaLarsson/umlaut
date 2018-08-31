@@ -184,13 +184,13 @@ class optional : private detail::optional_common_base<T>,
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-	      return std::invoke(std::forward<F>(f), this->m_value);
+		return std::invoke(std::forward<F>(f), this->m_value);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-	      return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -202,13 +202,13 @@ class optional : private detail::optional_common_base<T>,
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-	      return std::invoke(std::forward<F>(f), std::move(this->m_value));
+		return std::invoke(std::forward<F>(f), std::move(this->m_value));
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-	      return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -220,13 +220,13 @@ class optional : private detail::optional_common_base<T>,
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-	      return std::invoke(std::forward<F>(f), this->m_value);
+		return std::invoke(std::forward<F>(f), this->m_value);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-	      return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -238,13 +238,13 @@ class optional : private detail::optional_common_base<T>,
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-	      return std::invoke(std::forward<F>(f), std::move(this->m_value));
+		return std::invoke(std::forward<F>(f), std::move(this->m_value));
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-	      return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
 
 	    return optional<result_t>(nullopt);
 	}
