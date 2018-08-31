@@ -180,6 +180,8 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) & {
+	static_assert(std::is_invocable_v<F, T&>, "F must be invocable with T&");
+
 	using result_t = std::invoke_result_t<F, T&>;
 
 	if constexpr (is_optional_v<result_t>) {
@@ -198,6 +200,8 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) && {
+	static_assert(std::is_invocable_v<F, T&&>, "F must be invocable with T&&");
+
 	using result_t = std::invoke_result_t<F, T&&>;
 
 	if constexpr (is_optional_v<result_t>) {
@@ -216,6 +220,8 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const & {
+	static_assert(std::is_invocable_v<F, const T&>, "F must be invocable with const T&");
+
 	using result_t = std::invoke_result_t<F, const T&>;
 
 	if constexpr (is_optional_v<result_t>) {
@@ -234,6 +240,8 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const && {
+	static_assert(std::is_invocable_v<F, const T&>, "F must be invocable with const T&");
+
 	using result_t = std::invoke_result_t<F, const T&>;
 
 	if constexpr (is_optional_v<result_t>) {
@@ -252,7 +260,8 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto catch_error(F&& f) {
-	using result_t = decltype(std::forward<F>(f)());
+	static_assert(std::is_invocable_v<F>, "F must be invocable");
+
 	using result_t = std::invoke_result_t<F>;
 
 	if (has_value())
