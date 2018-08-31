@@ -111,4 +111,22 @@ TEST(optional, thenFail) {
     EXPECT_FALSE(result.has_value());
 }
 
+TEST(optional, catchError) {
+    bool first_catch_invoked = false;
+    bool second_catch_invoked = false;
+
+    auto first_result = umlaut::optional<int>(std::in_place, 0)
+      .then([](auto&&) { return umlaut::optional<int>(umlaut::nullopt); })
+      .catch_error([&]() { first_catch_invoked = true; });
+
+    auto second_result = umlaut::optional<int>(std::in_place, 0)
+      .then([](auto&& value) { return value + 1; })
+      .catch_error([&]() { second_catch_invoked = true; });
+
+    EXPECT_TRUE(first_catch_invoked);
+    EXPECT_FALSE(first_result.has_value());
+    EXPECT_FALSE(second_catch_invoked);
+    EXPECT_TRUE(second_result.has_value());
+}
+
 } // namespace
