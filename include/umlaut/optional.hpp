@@ -253,19 +253,20 @@ class optional : private detail::optional_common_base<T>,
     template <typename F>
     constexpr auto catch_error(F&& f) {
 	using result_t = decltype(std::forward<F>(f)());
+	using result_t = std::invoke_result_t<F>;
 
 	if (has_value())
 	    return *this;
 
 	if constexpr (is_optional_v<result_t>) {
-	    return std::forward<F>(f)();
+	    return std::invoke(std::forward<F>(f));
 	}
 	else if constexpr (std::is_void_v<result_t>) {
-	    std::forward<F>(f)();
+	    std::invoke(std::forward<F>(f));
 	    return *this;
 	}
 	else {
-	    return optional<result_t>(std::in_place, std::forward<F>(f)());
+	    return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f)));
 	}
     }
 };
