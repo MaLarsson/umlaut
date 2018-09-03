@@ -139,16 +139,24 @@ class optional : private detail::optional_common_base<T>,
     constexpr optional(const optional& rhs) = default;
     constexpr optional(optional&& rhs) = default;
 
-    optional& operator=(const optional& rhs) = default;
-    optional& operator=(optional&& rhs) = default;
-
     template <typename ...Args>
     constexpr optional(std::in_place_t, Args&&... args)
 	: base(std::in_place, std::forward<Args>(args)...) {}
 
-    constexpr bool has_value() const noexcept { return this->m_has_value; }
+    optional& operator=(const optional& rhs) = default;
+    optional& operator=(optional&& rhs) = default;
+
+    constexpr value_type& operator*() & { return this->m_value; }
+    constexpr value_type&& operator*() && { return std::move(this->m_value); }
+    constexpr const value_type& operator*() const & { return this->m_value; }
+    constexpr const value_type&& operator*() const && { return std::move(this->m_value); }
+
+    constexpr value_type* operator->() { return &this->m_value; }
+    constexpr const value_type* operator->() const { return &this->m_value; }
 
     constexpr explicit operator bool() const noexcept { return this->m_has_value; }
+
+    constexpr bool has_value() const noexcept { return this->m_has_value; }
 
     constexpr value_type& value() & {
 	if (has_value())
