@@ -55,6 +55,8 @@ namespace detail {
 
 template <typename T, bool = std::is_trivially_destructible_v<T>>
 struct optional_maybe_dtor {
+    using value_type = T;
+
     constexpr optional_maybe_dtor() noexcept
 	: m_dummy(), m_has_value(false) {}
 
@@ -63,8 +65,13 @@ struct optional_maybe_dtor {
 	: m_value(std::forward<Args>(args)...), m_has_value(true) {}
 
     ~optional_maybe_dtor() {
+	if (m_has_value)
+	    m_value.~value_type();
+    }
+
+    void reset() noexcept {
 	if (m_has_value) {
-	    m_value.~T();
+	    m_value.~value_type();
 	    m_has_value = false;
 	}
     }
@@ -72,7 +79,7 @@ struct optional_maybe_dtor {
     struct empty_byte {};
     union {
 	empty_byte m_dummy;
-	T m_value;
+	value_type m_value;
     };
 
     bool m_has_value;
@@ -80,33 +87,94 @@ struct optional_maybe_dtor {
 
 template <typename T>
 struct optional_maybe_dtor<T, true> {
+    using value_type = T;
+
     constexpr optional_maybe_dtor() noexcept
 	: m_dummy(), m_has_value(false) {}
 
     template <typename ...Args>
-    constexpr optional_maybe_dtor(std::in_place_t, Args&&... args)
+    constexpr explicit optional_maybe_dtor(std::in_place_t, Args&&... args)
 	: m_value(std::forward<Args>(args)...), m_has_value(true) {}
+
+    void reset() noexcept {
+	if (m_has_value)
+	    m_has_value = false;
+    }
 
     struct empty_byte {};
     union {
 	empty_byte m_dummy;
-	T m_value;
+	value_type m_value;
     };
 
     bool m_has_value;
 };
 
 template <typename T>
-struct optional_common_base : optional_maybe_dtor<T> {
+struct optional_storage_base : optional_maybe_dtor<T> {
+    using value_type = T;
     using optional_maybe_dtor<T>::optional_maybe_dtor;
+
+    constexpr value_type& get() & noexcept { return this->m_value; }
+    constexpr value_type&& get() && noexcept { return std::move(this->m_value); }
+    constexpr const value_type& get() const & noexcept { return this->m_value; }
+    constexpr const value_type&& get() const && noexcept { return std::move(this->m_value); }
 
     template <typename ...Args>
     void construct(Args&&... args) {
-	::new (std::addressof(this->m_value)) T(std::forward<Args>(args)...);
+	::new (std::addressof(this->m_value)) value_type(std::forward<Args>(args)...);
 	this->m_has_value = true;
     }
 
     constexpr bool has_value() const noexcept { return this->m_has_value; }
+
+    template <typename U>
+    void construct_from(U&& other) {
+	if (other.has_value())
+	    construct(std::forward<U>(other).get());
+    }
+};
+
+template <typename T, bool = std::is_trivially_copy_constructible_v<T>>
+struct optional_copy_base : optional_storage_base<T> {
+    using optional_storage_base<T>::optional_storage_base;
+};
+
+template <typename T>
+struct optional_copy_base<T, false> : optional_storage_base<T> {
+    using optional_storage_base<T>::optional_storage_base;
+
+    optional_copy_base() = default;
+
+    optional_copy_base(const optional_copy_base& other) {
+	this->construct_from(other);
+    }
+
+    optional_copy_base(optional_copy_base&&) = default;
+    optional_copy_base& operator=(const optional_copy_base&) = default;
+    optional_copy_base& operator=(optional_copy_base&&) = default;
+};
+
+template <typename T, bool = std::is_trivially_move_constructible_v<T>>
+struct optional_move_base : optional_copy_base<T> {
+    using optional_copy_base<T>::optional_copy_base;
+};
+
+template <typename T>
+struct optional_move_base<T, false> : optional_copy_base<T> {
+    using value_type = T;
+    using optional_copy_base<T>::optional_copy_base;
+
+    optional_move_base() = default;
+    optional_move_base(const optional_move_base&) = default;
+
+    optional_move_base(optional_move_base&& other)
+	noexcept(std::is_nothrow_move_constructible_v<value_type>) {
+	this->construct_from(std::move(other))
+    }
+
+    optional_move_base& operator=(const optional_move_base&) = default;
+    optional_move_base& operator=(optional_move_base&&) = default;
 };
 
 template <typename T>
@@ -124,10 +192,10 @@ using optional_delete_assign_base = delete_assign_base<
 } // namespace detail
 
 template <typename T>
-class optional : private detail::optional_common_base<T>,
+class optional : private detail::optional_move_base<T>,
 		 private detail::optional_delete_ctor_base<T>,
 		 private detail::optional_delete_assign_base<T> {
-    using base = detail::optional_common_base<T>;
+    using base = detail::optional_move_base<T>;
 
  public:
     using value_type = T;
