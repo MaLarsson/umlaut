@@ -204,19 +204,20 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) & {
-	static_assert(std::is_invocable_v<F, T&>, "F must be invocable with T&");
+	static_assert(std::is_invocable_v<F, value_type&>,
+		      "F must be invocable with value_type&");
 
-	using result_t = std::invoke_result_t<F, T&>;
+	using result_t = std::invoke_result_t<F, value_type&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-		return std::invoke(std::forward<F>(f), this->m_value);
+		return std::invoke(std::forward<F>(f), **this);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -224,19 +225,20 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) && {
-	static_assert(std::is_invocable_v<F, T&&>, "F must be invocable with T&&");
+	static_assert(std::is_invocable_v<F, value_type&&>,
+		      "F must be invocable with value_type&&");
 
-	using result_t = std::invoke_result_t<F, T&&>;
+	using result_t = std::invoke_result_t<F, value_type&&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-		return std::invoke(std::forward<F>(f), std::move(this->m_value));
+		return std::invoke(std::forward<F>(f), **this);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -244,19 +246,20 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const & {
-	static_assert(std::is_invocable_v<F, const T&>, "F must be invocable with const T&");
+	static_assert(std::is_invocable_v<F, const value_type&>,
+		      "F must be invocable with const value_type&");
 
-	using result_t = std::invoke_result_t<F, const T&>;
+	using result_t = std::invoke_result_t<F, const value_type&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-		return std::invoke(std::forward<F>(f), this->m_value);
+		return std::invoke(std::forward<F>(f), **this);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), this->m_value));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -264,19 +267,20 @@ class optional : private detail::optional_common_base<T>,
 
     template <typename F>
     constexpr auto then(F&& f) const && {
-	static_assert(std::is_invocable_v<F, const T&>, "F must be invocable with const T&");
+	static_assert(std::is_invocable_v<F, const value_type&>,
+		      "F must be invocable with const value_type&");
 
-	using result_t = std::invoke_result_t<F, const T&>;
+	using result_t = std::invoke_result_t<F, const value_type&>;
 
 	if constexpr (is_optional_v<result_t>) {
 	    if (has_value())
-		return std::invoke(std::forward<F>(f), std::move(this->m_value));
+		return std::invoke(std::forward<F>(f), **this);
 
 	    return result_t(nullopt);
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), std::move(this->m_value)));
+		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
