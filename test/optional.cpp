@@ -129,4 +129,31 @@ TEST(optional, catchError) {
     EXPECT_TRUE(second_result.has_value());
 }
 
+TEST(optional, reset) {
+    umlaut::optional<int> opt{std::in_place, 5};
+
+    EXPECT_TRUE(opt.has_value());
+
+    opt.reset();
+
+    EXPECT_FALSE(opt.has_value());
+}
+
+TEST(optional, emplace) {
+    struct type {
+	type(int i, double d) : i(i), d(d) {}
+	int i; double d;
+    };
+
+    umlaut::optional<int> opt1{std::in_place, 5};
+    umlaut::optional<type> opt2{};
+
+    opt1.emplace(10);
+    opt2.emplace(20, 1.1);
+
+    EXPECT_EQ(opt1.value(), 10);
+    EXPECT_EQ(opt2.value().i, 20);
+    EXPECT_EQ(opt2.value().d, 1.1);
+}
+
 } // namespace
