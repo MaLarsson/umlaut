@@ -59,7 +59,7 @@ struct optional_maybe_dtor {
 	: m_dummy(), m_has_value(false) {}
 
     template <typename ...Args>
-    constexpr optional_maybe_dtor(std::in_place_t, Args&&... args)
+    constexpr explicit optional_maybe_dtor(std::in_place_t, Args&&... args)
 	: m_value(std::forward<Args>(args)...), m_has_value(true) {}
 
     ~optional_maybe_dtor() {
@@ -140,7 +140,7 @@ class optional : private detail::optional_common_base<T>,
     constexpr optional(optional&& rhs) = default;
 
     template <typename ...Args>
-    constexpr optional(std::in_place_t, Args&&... args)
+    constexpr explicit optional(std::in_place_t, Args&&... args)
 	: base(std::in_place, std::forward<Args>(args)...) {}
 
     optional& operator=(const optional& rhs) = default;

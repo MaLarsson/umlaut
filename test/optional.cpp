@@ -81,15 +81,15 @@ int add_three(int value) { return value + 3; }
 
 TEST(optional, thenSuccess) {
     auto get_optional = []() ->umlaut::optional<int> {
-	return { std::in_place, 1 };
+	return umlaut::optional<int>(std::in_place, 1);
     };
 
     auto add_ten = [](auto&& value) ->umlaut::optional<int> {
-	return { std::in_place, value + 10 };
+	return umlaut::optional<int>(std::in_place, value + 10);
     };
 
     auto result = get_optional()
-      .then([](auto&& value) ->umlaut::optional<int> { return { std::in_place, value + 5 }; })
+      .then([](auto&& value) { return umlaut::optional<int>(std::in_place, value + 5); })
       .then([](auto&& value) { return value + 1; })
       .then(add_ten)
       .then(&add_three);
