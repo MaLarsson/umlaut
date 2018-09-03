@@ -133,6 +133,20 @@ struct optional_storage_base : optional_maybe_dtor<T> {
 	if (other.has_value())
 	    construct(std::forward<U>(other).get());
     }
+
+    template <typename U>
+    void assign_from(U&& other) {
+	if (has_value() == other.has_value()) {
+	    if (has_value())
+		this->m_value = std::forward<U>(other).get();
+	}
+	else {
+	    if (has_value())
+		this->reset();
+	    else
+		construct(std::forward<U>(other).get());
+	}
+    }
 };
 
 template <typename T, bool = std::is_trivially_copy_constructible_v<T>>
@@ -177,6 +191,58 @@ struct optional_move_base<T, false> : optional_copy_base<T> {
     optional_move_base& operator=(optional_move_base&&) = default;
 };
 
+template <typename T, bool =
+    std::is_trivially_destructible_v<T> &&
+    std::is_trivially_copy_constructible_v<T> &&
+    std::is_trivially_copy_assignable_v<T>
+>
+struct optional_copy_assign_base : optional_move_base<T> {
+    using optional_move_base<T>::optional_move_base;
+};
+
+template <typename T>
+struct optional_copy_assign_base<T, false> : optional_move_base<T> {
+    using optional_move_base<T>::optional_move_base;
+
+    optional_copy_assign_base() = default;
+    optional_copy_assign_base(const optional_copy_assign_base&) = default;
+    optional_copy_assign_base(optional_copy_assign_base&&) = default;
+
+    optional_copy_assign_base& operator=(const optional_copy_assign_base& other) {
+	this->assign_from(other);
+	return *this;
+    }
+
+    optional_copy_assign_base& operator=(optional_copy_assign_base&&) = default;
+};
+
+template <typename T, bool =
+    std::is_trivially_destructible_v<T> &&
+    std::is_trivially_move_constructible_v<T> &&
+    std::is_trivially_move_assignable_v<T>
+>
+struct optional_move_assign_base : optional_copy_assign_base<T> {
+    using optional_copy_assign_base<T>::optional_copy_assign_base;
+};
+
+template <typename T>
+struct optional_move_assign_base<T, false> : optional_copy_assign_base<T> {
+    using value_type = T;
+    using optional_copy_assign_base<T>::optional_copy_assign_base;
+
+    optional_move_assign_base() = default;
+    optional_move_assign_base(const optional_move_assign_base&) = default;
+    optional_move_assign_base(optional_move_assign_base&&) = default;
+    optional_move_assign_base& operator=(const optional_move_assign_base&) = default;
+
+    optional_move_assign_base& operator=(optional_move_assign_base&& other)
+	noexcept(std::is_nothrow_move_constructible_v<value_type> &&
+		 std::is_nothrow_move_assignable_v<value_type>) {
+	this->assign_from(std::move(other));
+	return *this;
+    }
+};
+
 template <typename T>
 using optional_delete_ctor_base = delete_ctor_base<
     std::is_copy_constructible_v<T>,
@@ -192,10 +258,10 @@ using optional_delete_assign_base = delete_assign_base<
 } // namespace detail
 
 template <typename T>
-class optional : private detail::optional_move_base<T>,
+class optional : private detail::optional_move_assign_base<T>,
 		 private detail::optional_delete_ctor_base<T>,
 		 private detail::optional_delete_assign_base<T> {
-    using base = detail::optional_move_base<T>;
+    using base = detail::optional_move_assign_base<T>;
 
  public:
     using value_type = T;
