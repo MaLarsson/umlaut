@@ -7,7 +7,10 @@
 namespace umlaut::detail {
 
 template <bool EnableCopy, bool EnableMove>
-struct delete_ctor_base {
+struct delete_ctor_base;
+
+template <>
+struct delete_ctor_base<true, true> {
     delete_ctor_base() = default;
     delete_ctor_base(const delete_ctor_base&) = default;
     delete_ctor_base(delete_ctor_base&&) noexcept = default;
@@ -42,9 +45,11 @@ struct delete_ctor_base<false, true> {
     delete_ctor_base& operator=(delete_ctor_base&&) noexcept = default;
 };
 
-
 template <bool EnableCopy, bool EnableMove>
-struct delete_assign_base {
+struct delete_assign_base;
+
+template <>
+struct delete_assign_base<true, true> {
     delete_assign_base() = default;
     delete_assign_base(const delete_assign_base&) = default;
     delete_assign_base(delete_assign_base&&) noexcept = default;
