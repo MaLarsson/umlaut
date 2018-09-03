@@ -69,7 +69,7 @@ struct optional_maybe_dtor {
 	    m_value.~value_type();
     }
 
-    void reset() noexcept {
+    void destroy() noexcept {
 	if (m_has_value) {
 	    m_value.~value_type();
 	    m_has_value = false;
@@ -96,7 +96,7 @@ struct optional_maybe_dtor<T, true> {
     constexpr explicit optional_maybe_dtor(std::in_place_t, Args&&... args)
 	: m_value(std::forward<Args>(args)...), m_has_value(true) {}
 
-    void reset() noexcept {
+    void destroy() noexcept {
 	if (m_has_value)
 	    m_has_value = false;
     }
@@ -142,7 +142,7 @@ struct optional_storage_base : optional_maybe_dtor<T> {
 	}
 	else {
 	    if (has_value())
-		this->reset();
+		this->destroy();
 	    else
 		construct(std::forward<U>(other).get());
 	}
@@ -334,6 +334,16 @@ class optional : private detail::optional_move_assign_base<T>,
 	    return std::move(this->m_value);
 
 	return static_cast<value_type>(std::forward<U>(default_value));
+    }
+
+    void reset() noexcept { this->destroy(); }
+
+    template <typename ...Args>
+    value_type& emplace(Args&&... args) {
+	this->destroy();
+	this->construct(std::forward<Args>(args)...);
+
+	return this->m_value;
     }
 
     template <typename F>
