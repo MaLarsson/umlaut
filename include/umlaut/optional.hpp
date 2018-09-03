@@ -186,6 +186,22 @@ class optional : private detail::optional_common_base<T>,
 	throw bad_optional_access{};
     }
 
+    template <typename U>
+    constexpr value_type value_or(U&& default_value) const & {
+	if (has_value())
+	    return this->m_value;
+
+	return static_cast<value_type>(std::forward<U>(default_value));
+    }
+
+    template <typename U>
+    constexpr value_type value_or(U&& default_value) && {
+	if (has_value())
+	    return std::move(this->m_value);
+
+	return static_cast<value_type>(std::forward<U>(default_value));
+    }
+
     template <typename F>
     constexpr auto then(F&& f) & {
 	static_assert(std::is_invocable_v<F, T&>, "F must be invocable with T&");
