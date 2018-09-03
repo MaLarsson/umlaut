@@ -184,7 +184,7 @@ struct optional_move_base<T, false> : optional_copy_base<T> {
 
     optional_move_base(optional_move_base&& other)
 	noexcept(std::is_nothrow_move_constructible_v<value_type>) {
-	this->construct_from(std::move(other))
+	this->construct_from(std::move(other));
     }
 
     optional_move_base& operator=(const optional_move_base&) = default;
