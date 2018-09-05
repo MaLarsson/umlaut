@@ -115,11 +115,6 @@ struct optional_storage_base : optional_maybe_dtor<T> {
     using value_type = T;
     using optional_maybe_dtor<T>::optional_maybe_dtor;
 
-    constexpr value_type& get() & noexcept { return this->m_value; }
-    constexpr value_type&& get() && noexcept { return std::move(this->m_value); }
-    constexpr const value_type& get() const & noexcept { return this->m_value; }
-    constexpr const value_type&& get() const && noexcept { return std::move(this->m_value); }
-
     template <typename ...Args>
     void construct(Args&&... args) {
 	::new (std::addressof(this->m_value)) value_type(std::forward<Args>(args)...);
@@ -131,20 +126,20 @@ struct optional_storage_base : optional_maybe_dtor<T> {
     template <typename U>
     void construct_from(U&& other) {
 	if (other.has_value())
-	    construct(std::forward<U>(other).get());
+	    construct(*std::forward<U>(other));
     }
 
     template <typename U>
     void assign_from(U&& other) {
 	if (has_value() == other.has_value()) {
 	    if (has_value())
-		this->m_value = std::forward<U>(other).get();
+		this->m_value = *std::forward<U>(other);
 	}
 	else {
 	    if (has_value())
 		this->destroy();
 	    else
-		construct(std::forward<U>(other).get());
+		construct(*std::forward<U>(other));
 	}
     }
 };
@@ -276,6 +271,22 @@ class optional : private detail::optional_move_assign_base<T>,
     template <typename ...Args>
     constexpr explicit optional(std::in_place_t, Args&&... args)
 	: base(std::in_place, std::forward<Args>(args)...) {}
+
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<const U&, T>>* = nullptr
+    >
+    optional(const optional<U>& other) {
+	this->construct_from(other);
+    }
+
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<const U&, T>>* = nullptr
+    >
+    explicit optional(const optional<U>& other) {
+	this->construct_from(other);
+    }
 
     optional& operator=(const optional& rhs) = default;
     optional& operator=(optional&& rhs) = default;

@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <umlaut/optional.hpp>
 #include <type_traits>
+#include <string>
 
 namespace {
 
@@ -154,6 +155,18 @@ TEST(optional, emplace) {
     EXPECT_EQ(opt1.value(), 10);
     EXPECT_EQ(opt2.value().i, 20);
     EXPECT_EQ(opt2.value().d, 1.1);
+}
+
+TEST(optional, convertingCopyConstructor) {
+    umlaut::optional<int> int_optional{std::in_place, 1};
+    umlaut::optional<double> double_optional{int_optional};
+
+    bool double_to_int = std::is_constructible_v<umlaut::optional<int>, umlaut::optional<double>>;
+    bool int_to_string = std::is_constructible_v<umlaut::optional<std::string>, umlaut::optional<int>>;
+
+    EXPECT_EQ(int_optional.value(), double_optional.value());
+    EXPECT_TRUE(double_to_int);
+    EXPECT_FALSE(int_to_string);
 }
 
 } // namespace
