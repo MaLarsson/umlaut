@@ -53,6 +53,18 @@ class bad_optional_access : public std::exception {
 
 namespace detail {
 
+template <typename T, typename U>
+using optional_enable_conversion_t = std::enable_if_t<
+    !std::is_constructible_v<T, optional<U>&> &&
+    !std::is_constructible_v<T, const optional<U>&> &&
+    !std::is_constructible_v<T, optional<U>&&> &&
+    !std::is_constructible_v<T, const optional<U>&&> &&
+    !std::is_convertible_v<optional<U>&, T> &&
+    !std::is_convertible_v<const optional<U>&, T> &&
+    !std::is_convertible_v<optional<U>&&, T> &&
+    !std::is_convertible_v<const optional<U>&&, T>
+>;
+
 template <typename T, bool = std::is_trivially_destructible_v<T>>
 struct optional_maybe_dtor {
     using value_type = T;
@@ -274,7 +286,8 @@ class optional : private detail::optional_move_assign_base<T>,
 
     template <typename U,
         std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
-        std::enable_if_t<std::is_convertible_v<const U&, T>>* = nullptr
+        std::enable_if_t<std::is_convertible_v<const U&, T>>* = nullptr,
+        detail::optional_enable_conversion_t<T, U>* = nullptr,
     >
     optional(const optional<U>& other) {
 	this->construct_from(other);
@@ -282,10 +295,29 @@ class optional : private detail::optional_move_assign_base<T>,
 
     template <typename U,
         std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
-        std::enable_if_t<!std::is_convertible_v<const U&, T>>* = nullptr
+        std::enable_if_t<!std::is_convertible_v<const U&, T>>* = nullptr,
+        detail::optional_enable_conversion_t<T, U>* = nullptr,
     >
     explicit optional(const optional<U>& other) {
 	this->construct_from(other);
+    }
+
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<U&&, T>>* = nullptr,
+        detail::optional_enable_conversion_t<T, U>* = nullptr,
+    >
+    optional(optional<U>&& other) {
+	this->construct_from(std::move(other));
+    }
+
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<U&&, T>>* = nullptr,
+        detail::optional_enable_conversion_t<T, U>* = nullptr,
+    >
+    explicit optional(optional<U>&& other) {
+	this->construct_from(std::move(other));
     }
 
     optional& operator=(const optional& rhs) = default;
