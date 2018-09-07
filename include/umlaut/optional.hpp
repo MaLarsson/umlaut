@@ -357,6 +357,11 @@ class optional : private detail::optional_move_assign_base<T>,
     constexpr explicit optional(U&& value)
 	: base(std::in_place, std::forward<U>(value)) {}
 
+    optional& operator=(nullopt_t) noexcept {
+	reset();
+	return *this;
+    }
+
     optional& operator=(const optional& rhs) = default;
     optional& operator=(optional&& rhs) = default;
 
