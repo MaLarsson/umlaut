@@ -65,6 +65,13 @@ using optional_enable_converting_constructors_t = std::enable_if_t<
     !std::is_convertible_v<const optional<U>&&, T>
 >;
 
+template <typename T, typename U>
+template <typename T, typename U>
+using enable_forward_value_t = std::enable_if_t<
+    !std::is_same_v<remove_cvref_t<U>, std::in_place_t> &&
+    !std::is_same_v<remove_cvref_t<U>, optional<T>>
+>;
+
 template <typename T, bool = std::is_trivially_destructible_v<T>>
 struct optional_maybe_dtor {
     using value_type = T;
@@ -319,6 +326,21 @@ class optional : private detail::optional_move_assign_base<T>,
     explicit optional(optional<U>&& other) {
 	this->construct_from(std::move(other));
     }
+
+    template <typename U = value_type,
+        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<U&&, T>>* = nullptr,
+        detail::enable_forward_value_t<T, U>* = nullptr
+    >
+    constexpr optional(U&& value) : base(std::in_place, std::forward<U>(value)) {}
+
+    template <typename U = value_type,
+        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<U&&, T>>* = nullptr,
+        detail::enable_forward_value_t<T, U>* = nullptr
+    >
+    constexpr explicit optional(U&& value)
+	: base(std::in_place, std::forward<U>(value)) {}
 
     optional& operator=(const optional& rhs) = default;
     optional& operator=(optional&& rhs) = default;

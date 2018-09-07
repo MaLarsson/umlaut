@@ -169,4 +169,12 @@ TEST(optional, convertingCopyConstructor) {
     EXPECT_FALSE(int_to_string);
 }
 
+TEST(optional, convertingConstructor) {
+    bool double_to_int = std::is_constructible_v<umlaut::optional<int>, double>;
+    bool int_to_string = std::is_constructible_v<umlaut::optional<std::string>, int>;
+
+    EXPECT_TRUE(double_to_int);
+    EXPECT_FALSE(int_to_string);
+}
+
 } // namespace
