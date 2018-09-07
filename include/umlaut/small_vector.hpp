@@ -9,7 +9,6 @@
 
 #include "compressed_pair.hpp"
 #include "traits.hpp"
-#include "tags.hpp"
 
 #include <memory>
 #include <iterator>
@@ -19,6 +18,23 @@
 #include <stdexcept>
 
 namespace umlaut {
+
+/// @brief Disambiguator tag.
+///
+/// Empty struct tag type used to disambiguate between different functions
+/// taking a list of objects for when initializing a container.
+/// This is used as an alternative to `std::initializer_list` but without the overhead
+/// of `std::initializer_list`. For more information see the
+/// <a href="https://www.youtube.com/watch?v=sSlmmZMFsXQ">presentation</a>
+/// by Jason Turner at C++Now 2018.
+struct list_construct_t {
+    struct do_not_use {};
+    constexpr explicit list_construct_t(do_not_use) noexcept {}
+};
+
+/// @relates list_construct_t
+/// @brief Instance of the disambiguator tag umlaut::list_construct_t.
+inline constexpr list_construct_t list_construct{list_construct_t::do_not_use{}};
 
 /// Generic container.
 template <typename T, typename Alloc = std::allocator<T>>
