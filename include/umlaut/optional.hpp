@@ -66,6 +66,21 @@ using optional_enable_converting_constructors_t = std::enable_if_t<
 >;
 
 template <typename T, typename U>
+using optional_enable_converting_assignment_t = std::enable_if_t<
+    !std::is_constructible_v<T, optional<U>&> &&
+    !std::is_constructible_v<T, const optional<U>&> &&
+    !std::is_constructible_v<T, optional<U>&&> &&
+    !std::is_constructible_v<T, const optional<U>&&> &&
+    !std::is_convertible_v<optional<U>&, T> &&
+    !std::is_convertible_v<const optional<U>&, T> &&
+    !std::is_convertible_v<optional<U>&&, T> &&
+    !std::is_convertible_v<const optional<U>&&, T> &&
+    !std::is_assignable_v<T&, optional<U>&> &&
+    !std::is_assignable_v<T&, const optional<U>&> &&
+    !std::is_assignable_v<T&, optional<U>&&> &&
+    !std::is_assignable_v<T&, const optional<U>&&>
+>;
+
 template <typename T, typename U>
 using enable_forward_value_t = std::enable_if_t<
     !std::is_same_v<remove_cvref_t<U>, std::in_place_t> &&
