@@ -466,7 +466,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
+		return optional<result_t>(std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -487,7 +487,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
+		return optional<result_t>(std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -508,7 +508,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
+		return optional<result_t>(std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -529,7 +529,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	}
 	else {
 	    if (has_value())
-		return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f), **this));
+		return optional<result_t>(std::invoke(std::forward<F>(f), **this));
 
 	    return optional<result_t>(nullopt);
 	}
@@ -552,7 +552,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	    return *this;
 	}
 	else {
-	    return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f)));
+	    return optional<result_t>(std::invoke(std::forward<F>(f)));
 	}
     }
 
@@ -573,7 +573,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	    return std::move(*this);
 	}
 	else {
-	    return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f)));
+	    return optional<result_t>(std::invoke(std::forward<F>(f)));
 	}
     }
 
@@ -594,7 +594,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	    return *this;
 	}
 	else {
-	    return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f)));
+	    return optional<result_t>(std::invoke(std::forward<F>(f)));
 	}
     }
 
@@ -615,7 +615,7 @@ class optional : private detail::optional_move_assign_base<T>,
 	    return std::move(*this);
 	}
 	else {
-	    return optional<result_t>(std::in_place, std::invoke(std::forward<F>(f)));
+	    return optional<result_t>(std::invoke(std::forward<F>(f)));
 	}
     }
 };
