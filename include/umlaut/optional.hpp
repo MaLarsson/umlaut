@@ -365,22 +365,32 @@ class optional : private detail::optional_move_assign_base<T>,
     optional& operator=(const optional& rhs) = default;
     optional& operator=(optional&& rhs) = default;
 
-    // TODO: add constraints
-    template <typename U>
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
+        std::enable_if_t<std::is_assignable_v<T&, const U&>>* = nullptr,
+        detail::optional_enable_converting_assignment_t<T, U>* = nullptr
+    >
     optional& operator=(const optional<U>& other) {
 	this->assign_from(other);
 	return *this;
     }
 
-    // TODO: add constraints
-    template <typename U>
+    template <typename U,
+        std::enable_if_t<std::is_constructible_v<T, U>>* = nullptr,
+        std::enable_if_t<std::is_assignable_v<T&, U>>* = nullptr,
+        detail::optional_enable_converting_assignment_t<T, U>* = nullptr
+    >
     optional& operator=(optional<U>&& other) {
 	this->assign_from(std::move(other));
 	return *this;
     }
 
-    // TODO: add constraints
-    template <typename U = value_type>
+    template <typename U = value_type, typename = std::enable_if_t<
+        !std::is_same_v<remove_cvref<U>, optional<T>> &&
+        std::is_constructible_v<T, U> &&
+        std::is_assignable_v<T&, U> &&
+        !std::conjunction_v<std::is_scalar<T>, std::is_same<T, std::decay_t<U>>>
+    >>
     optional& operator=(U&& value) {
 	this->assign_from(std::forward<U>(value));
     }
