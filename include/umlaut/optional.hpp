@@ -365,6 +365,26 @@ class optional : private detail::optional_move_assign_base<T>,
     optional& operator=(const optional& rhs) = default;
     optional& operator=(optional&& rhs) = default;
 
+    // TODO: add constraints
+    template <typename U>
+    optional& operator=(const optional<U>& other) {
+	this->assign_from(other);
+	return *this;
+    }
+
+    // TODO: add constraints
+    template <typename U>
+    optional& operator=(optional<U>&& other) {
+	this->assign_from(std::move(other));
+	return *this;
+    }
+
+    // TODO: add constraints
+    template <typename U = value_type>
+    optional& operator=(U&& value) {
+	this->assign_from(std::forward<U>(value));
+    }
+
     constexpr value_type& operator*() & { return this->m_value; }
     constexpr value_type&& operator*() && { return std::move(this->m_value); }
     constexpr const value_type& operator*() const & { return this->m_value; }
