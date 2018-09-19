@@ -315,52 +315,52 @@ class optional : private detail::optional_move_assign_base<T>,
 	: base(std::in_place, std::forward<Args>(args)...) {}
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
-        std::enable_if_t<std::is_convertible_v<const U&, T>>* = nullptr,
-        detail::optional_enable_converting_constructors_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, const U&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<const U&, value_type>>* = nullptr,
+        detail::optional_enable_converting_constructors_t<value_type, U>* = nullptr
     >
     optional(const optional<U>& other) {
 	this->construct_from(other);
     }
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
-        std::enable_if_t<!std::is_convertible_v<const U&, T>>* = nullptr,
-        detail::optional_enable_converting_constructors_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, const U&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<const U&, value_type>>* = nullptr,
+        detail::optional_enable_converting_constructors_t<value_type, U>* = nullptr
     >
     explicit optional(const optional<U>& other) {
 	this->construct_from(other);
     }
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
-        std::enable_if_t<std::is_convertible_v<U&&, T>>* = nullptr,
-        detail::optional_enable_converting_constructors_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, U&&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<U&&, value_type>>* = nullptr,
+        detail::optional_enable_converting_constructors_t<value_type, U>* = nullptr
     >
     optional(optional<U>&& other) {
 	this->construct_from(std::move(other));
     }
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
-        std::enable_if_t<!std::is_convertible_v<U&&, T>>* = nullptr,
-        detail::optional_enable_converting_constructors_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, U&&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<U&&, value_type>>* = nullptr,
+        detail::optional_enable_converting_constructors_t<value_type, U>* = nullptr
     >
     explicit optional(optional<U>&& other) {
 	this->construct_from(std::move(other));
     }
 
-    template <typename U = T,
-        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
-        std::enable_if_t<std::is_convertible_v<U&&, T>>* = nullptr,
-        detail::enable_forward_value_t<T, U>* = nullptr
+    template <typename U = value_type,
+        std::enable_if_t<std::is_constructible_v<value_type, U&&>>* = nullptr,
+        std::enable_if_t<std::is_convertible_v<U&&, value_type>>* = nullptr,
+        detail::enable_forward_value_t<value_type, U>* = nullptr
     >
     constexpr optional(U&& value) : base(std::in_place, std::forward<U>(value)) {}
 
-    template <typename U = T,
-        std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
-        std::enable_if_t<!std::is_convertible_v<U&&, T>>* = nullptr,
-        detail::enable_forward_value_t<T, U>* = nullptr
+    template <typename U = value_type,
+        std::enable_if_t<std::is_constructible_v<value_type, U&&>>* = nullptr,
+        std::enable_if_t<!std::is_convertible_v<U&&, value_type>>* = nullptr,
+        detail::enable_forward_value_t<value_type, U>* = nullptr
     >
     constexpr explicit optional(U&& value)
 	: base(std::in_place, std::forward<U>(value)) {}
@@ -374,9 +374,9 @@ class optional : private detail::optional_move_assign_base<T>,
     optional& operator=(optional&& rhs) = default;
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, const U&>>* = nullptr,
-        std::enable_if_t<std::is_assignable_v<T&, const U&>>* = nullptr,
-        detail::optional_enable_converting_assignment_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, const U&>>* = nullptr,
+        std::enable_if_t<std::is_assignable_v<value_type&, const U&>>* = nullptr,
+        detail::optional_enable_converting_assignment_t<value_type, U>* = nullptr
     >
     optional& operator=(const optional<U>& other) {
 	this->assign_from(other);
@@ -384,20 +384,21 @@ class optional : private detail::optional_move_assign_base<T>,
     }
 
     template <typename U,
-        std::enable_if_t<std::is_constructible_v<T, U>>* = nullptr,
-        std::enable_if_t<std::is_assignable_v<T&, U>>* = nullptr,
-        detail::optional_enable_converting_assignment_t<T, U>* = nullptr
+        std::enable_if_t<std::is_constructible_v<value_type, U>>* = nullptr,
+        std::enable_if_t<std::is_assignable_v<value_type&, U>>* = nullptr,
+        detail::optional_enable_converting_assignment_t<value_type, U>* = nullptr
     >
     optional& operator=(optional<U>&& other) {
 	this->assign_from(std::move(other));
 	return *this;
     }
 
-    template <typename U = T, detail::optional_enable_forward_assignment_t<T, U>* = nullptr>
+    template <typename U = value_type,
+        detail::optional_enable_forward_assignment_t<value_type, U>* = nullptr
+    >
     optional& operator=(U&& value) {
-	this->destroy();
+	reset();
 	this->construct(std::forward<U>(value));
-
 	return *this;
     }
 
@@ -461,7 +462,7 @@ class optional : private detail::optional_move_assign_base<T>,
 
     template <typename ...Args>
     value_type& emplace(Args&&... args) {
-	this->destroy();
+	reset();
 	this->construct(std::forward<Args>(args)...);
 
 	return this->m_value;
