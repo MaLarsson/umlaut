@@ -82,6 +82,14 @@ using optional_enable_converting_assignment_t = std::enable_if_t<
 >;
 
 template <typename T, typename U>
+using optional_enable_forward_assignment_t = std::enable_if_t<
+    !std::is_same_v<remove_cvref<U>, optional<T>> &&
+    std::is_constructible_v<T, U> &&
+    std::is_assignable_v<T&, U> &&
+    !std::conjunction_v<std::is_scalar<T>, std::is_same<T, std::decay_t<U>>>
+>;
+
+template <typename T, typename U>
 using enable_forward_value_t = std::enable_if_t<
     !std::is_same_v<remove_cvref_t<U>, std::in_place_t> &&
     !std::is_same_v<remove_cvref_t<U>, optional<T>>
@@ -342,14 +350,14 @@ class optional : private detail::optional_move_assign_base<T>,
 	this->construct_from(std::move(other));
     }
 
-    template <typename U = value_type,
+    template <typename U = T,
         std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
         std::enable_if_t<std::is_convertible_v<U&&, T>>* = nullptr,
         detail::enable_forward_value_t<T, U>* = nullptr
     >
     constexpr optional(U&& value) : base(std::in_place, std::forward<U>(value)) {}
 
-    template <typename U = value_type,
+    template <typename U = T,
         std::enable_if_t<std::is_constructible_v<T, U&&>>* = nullptr,
         std::enable_if_t<!std::is_convertible_v<U&&, T>>* = nullptr,
         detail::enable_forward_value_t<T, U>* = nullptr
@@ -385,14 +393,12 @@ class optional : private detail::optional_move_assign_base<T>,
 	return *this;
     }
 
-    template <typename U = value_type, typename = std::enable_if_t<
-        !std::is_same_v<remove_cvref<U>, optional<T>> &&
-        std::is_constructible_v<T, U> &&
-        std::is_assignable_v<T&, U> &&
-        !std::conjunction_v<std::is_scalar<T>, std::is_same<T, std::decay_t<U>>>
-    >>
+    template <typename U = T, detail::optional_enable_forward_assignment_t<T, U>* = nullptr>
     optional& operator=(U&& value) {
-	this->assign_from(std::forward<U>(value));
+	this->destroy();
+	this->construct(std::forward<U>(value));
+
+	return *this;
     }
 
     constexpr value_type& operator*() & { return this->m_value; }

@@ -177,4 +177,9 @@ TEST(optional, convertingConstructor) {
     EXPECT_FALSE(int_to_string);
 }
 
+TEST(optional, convertingAssignment) {
+    umlaut::optional<double> double_optional(3.33);
+    double_optional = 1;
+}
+
 } // namespace
