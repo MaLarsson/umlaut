@@ -458,6 +458,27 @@ class optional : private detail::optional_move_assign_base<T>,
 	return static_cast<value_type>(std::forward<U>(default_value));
     }
 
+    void swap(optional& other)
+	noexcept(std::is_nothrow_move_constructible_v<value_type> &&
+		 std::is_nothrow_swappable_v<value_type>) {
+	if (has_value() == other.has_value()) {
+	    if (has_value()) {
+		using std::swap;
+		swap(**this, *other);
+	    }
+	}
+	else {
+	    if (has_value()) {
+		other.construct(std::move(**this));
+		reset();
+	    }
+	    else {
+		this->construct(std::move(*other));
+		other.reset();
+	    }
+	}
+    }
+
     void reset() noexcept { this->destroy(); }
 
     template <typename ...Args>
@@ -636,5 +657,11 @@ class optional : private detail::optional_move_assign_base<T>,
 	}
     }
 };
+
+template <typename T>
+std::enable_if_t<std::is_move_constructible_v<T> && std::is_swappable_v<T>>
+swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
+    lhs.swap(rhs);
+}
 
 } // namespace umlaut

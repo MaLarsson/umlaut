@@ -180,6 +180,47 @@ TEST(optional, convertingConstructor) {
 TEST(optional, convertingAssignment) {
     umlaut::optional<double> double_optional(3.33);
     double_optional = 1;
+
+    EXPECT_TRUE(double_optional.has_value());
+    EXPECT_EQ(double_optional.value(), 1);
+}
+
+TEST(optional, swapBothHasValue) {
+    umlaut::optional<int> opt1{1};
+    umlaut::optional<int> opt2{2};
+
+    opt1.swap(opt2);
+
+    EXPECT_EQ(opt1.value(), 2);
+    EXPECT_EQ(opt2.value(), 1);
+}
+
+TEST(optional, swapOneHasValue) {
+    umlaut::optional<int> opt1{1};
+    umlaut::optional<int> opt2{umlaut::nullopt};
+
+    opt1.swap(opt2);
+
+    EXPECT_FALSE(opt1.has_value());
+    EXPECT_TRUE(opt2.has_value());
+    EXPECT_EQ(opt2.value(), 1);
+
+    opt1.swap(opt2);
+
+    EXPECT_FALSE(opt2.has_value());
+    EXPECT_TRUE(opt1.has_value());
+    EXPECT_EQ(opt1.value(), 1);
+}
+
+TEST(optional, adlSwap) {
+    umlaut::optional<int> opt1{1};
+    umlaut::optional<int> opt2{2};
+
+    using std::swap;
+    swap(opt1, opt2);
+
+    EXPECT_EQ(opt1.value(), 2);
+    EXPECT_EQ(opt2.value(), 1);
 }
 
 } // namespace
