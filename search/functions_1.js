@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['data',['data',['../classumlaut_1_1small__vector__base.html#aab170dd80d64aeb5da4596f825e89cd4',1,'umlaut::small_vector_base::data() noexcept'],['../classumlaut_1_1small__vector__base.html#ae96df0f5cfe229134e04db491bc17c1a',1,'umlaut::small_vector_base::data() const  noexcept']]]
+  ['data',['data',['../classul_1_1small__vector__base.html#acfc9e32cc1f27b14d2077b4362dcd1a9',1,'ul::small_vector_base::data() noexcept'],['../classul_1_1small__vector__base.html#ab3f09dda468e786fe25939287a6a89d3',1,'ul::small_vector_base::data() const  noexcept']]]
 ];

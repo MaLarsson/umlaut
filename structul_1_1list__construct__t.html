@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Umlaut: umlaut::is_contiguous_iterator::is_contiguous_iterator_v</title>
+<title>Umlaut: ul::list_construct_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -39,7 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -59,6 +59,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -75,48 +81,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>umlaut</b></li><li class="navelem"><a class="el" href="structumlaut_1_1is__contiguous__iterator.html">is_contiguous_iterator</a></li>  </ul>
+<li class="navelem"><b>ul</b></li><li class="navelem"><a class="el" href="structul_1_1list__construct__t.html">list_construct_t</a></li>  </ul>
 </div>
 </div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#related">Related Functions</a> &#124;
+<a href="structul_1_1list__construct__t-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">ul::list_construct_t Struct Reference</div>  </div>
+</div><!--header-->
 <div class="contents">
-<table cellspacing="0" cellpadding="0" border="0">
-  <tr>
-   <td valign="top">
-      <div class="navtab">
-        <table>
-          <tr><td class="navtab"><a class="qindexHL" href="structumlaut_1_1is__contiguous__iterator_a1d21641bf7dc946d0c8ef3c9fc0e260c.html#a1d21641bf7dc946d0c8ef3c9fc0e260c">is_contiguous_iterator_v</a></td></tr>
-        </table>
-      </div>
-   </td>
-   <td valign="top" class="mempage">
-<a class="anchor" id="a1d21641bf7dc946d0c8ef3c9fc0e260c"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool is_contiguous_iterator_v = <a class="el" href="structumlaut_1_1is__contiguous__iterator.html">is_contiguous_iterator</a>&lt;T&gt;::value</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">related</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
-</div>
-</div>
-    </td>
-  </tr>
+<p>Disambiguator tag.  
+ <a href="structul_1_1list__construct__t.html#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="related"></a>
+Related Functions</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>(Note that these are not member functions.) </p>
+</td></tr>
+<tr class="memitem:a91195d34a96ae62ce9277e8afc689d4f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a91195d34a96ae62ce9277e8afc689d4f"></a>
+constexpr <a class="el" href="structul_1_1list__construct__t.html">list_construct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structul_1_1list__construct__t.html#a91195d34a96ae62ce9277e8afc689d4f">list_construct</a> {list_construct_t::do_not_use{}}</td></tr>
+<tr class="memdesc:a91195d34a96ae62ce9277e8afc689d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the disambiguator tag <a class="el" href="structul_1_1list__construct__t.html" title="Disambiguator tag. ">ul::list_construct_t</a>. <br /></td></tr>
+<tr class="separator:a91195d34a96ae62ce9277e8afc689d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Disambiguator tag. </p>
+<p>Empty struct tag type used to disambiguate between different functions taking a list of objects for when initializing a container. This is used as an alternative to <code>std::initializer_list</code> but without the overhead of <code>std::initializer_list</code>. For more information see the <a href="https://www.youtube.com/watch?v=sSlmmZMFsXQ">presentation</a> by Jason Turner at C++Now 2018. </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

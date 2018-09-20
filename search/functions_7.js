@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reserve',['reserve',['../classumlaut_1_1small__vector__base_a4aabd898fbf4f1e98a69f53494a4a8db.html#a4aabd898fbf4f1e98a69f53494a4a8db',1,'umlaut::small_vector_base']]]
+  ['reserve',['reserve',['../classul_1_1small__vector__base_a9be36768a1cd7dcfabc83aa2e98f8e1a.html#a9be36768a1cd7dcfabc83aa2e98f8e1a',1,'ul::small_vector_base']]]
 ];
