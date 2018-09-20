@@ -664,4 +664,188 @@ swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
     lhs.swap(rhs);
 }
 
+// compare optionals
+template <typename T, typename U>
+constexpr bool operator==(const optional<T>& lhs, const optional<U>& rhs)
+{
+    // TODO ...
+    return true;
+}
+
+template <typename T,typename U>
+constexpr bool operator!=(const optional<T>& lhs, const optional<U>& rhs) {
+    // TODO ...
+    return true;
+}
+
+template <typename T,typename U>
+constexpr bool operator<(const optional<T>& lhs, const optional<U>& rhs) {
+    // TODO ...
+    return true;
+}
+
+template <typename T,typename U>
+constexpr bool operator<=(const optional<T>& lhs, const optional<U>& rhs) {
+    // TODO ...
+    return true;
+}
+
+template <typename T,typename U>
+constexpr bool operator>(const optional<T>& lhs, const optional<U>& rhs) {
+    // TODO ...
+    return true;
+}
+
+template <typename T,typename U>
+constexpr bool operator>=(const optional<T>& lhs, const optional<U>& rhs) {
+    // TODO ...
+    return true;
+}
+
+// compare optional and nullopt
+template <typename T>
+constexpr bool operator==(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator==(ul::nullopt_t, const optional<T>& opt) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator!=(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator!=(ul::nullopt_t, const optional<T>& opt) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator<(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator<(ul::nullopt_t, const optional<T>& opt) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator<=(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator<=(ul::nullopt_t, const optional<T>& op) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator>(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator>(ul::nullopt_t, const optional<T>& opt) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator>=(const optional<T>& opt, ul::nullopt_t) noexcept {
+    // TODO ...
+    return true;
+}
+
+template <typename T>
+constexpr bool operator>=(ul::nullopt_t, const optional<T>& opt) noexcept {
+    // TODO ...
+    return true;
+}
+
+// compare optional and value
+template <typename T, typename U>
+constexpr bool operator==(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator==(const T& value, const optional<U>& opt) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator!=(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator!=(const T& value, const optional<U>& opt) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator<(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator<(const T& value, const optional<U>& opt) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator<=(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator<=(const T& value, const optional<U>& op) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator>(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator>(const T& value, const optional<U>& opt) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator>=(const optional<T>& opt, const U& value) {
+    // TODO ...
+    return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator>=(const T& value, const optional<U>& opt) {
+    // TODO ...
+    return true;
+}
+
 } // namespace ul
