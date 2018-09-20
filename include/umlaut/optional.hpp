@@ -1,5 +1,5 @@
 /// @file
-/// Defines umlaut::optional.
+/// Defines ul::optional.
 ///
 /// @copyright Marcus Larsson 2018
 /// Distributed under the Boost Software License, Version 1.0.
@@ -17,7 +17,7 @@
 #include <exception>
 #include <functional>
 
-namespace umlaut {
+namespace ul {
 
 template <typename T>
 class optional;
@@ -664,4 +664,4 @@ swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
     lhs.swap(rhs);
 }
 
-} // namespace umlaut
+} // namespace ul

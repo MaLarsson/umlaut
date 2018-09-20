@@ -16,7 +16,8 @@
 #define UMLAUT_USE_TYPE_PACK_ELEMENT_INTRINSIC
 #endif
 
-namespace umlaut::detail {
+namespace ul {
+namespace detail {
 
 template <std::size_t I, typename T>
 struct indexed { using type = T; };
@@ -30,9 +31,7 @@ struct indexer<std::index_sequence<Is...>, Ts...> : indexed<Is, Ts>... {};
 template <std::size_t I, typename T>
 [[maybe_unused]] static indexed<I, T> select(indexed<I, T>);
 
-} // namespace umlaut::detail
-
-namespace umlaut {
+} // namespace detail
 
 /// @brief Traits class for parameter pack indexing.
 template <std::size_t I, typename ...Ts>
@@ -82,9 +81,7 @@ struct priority_tag : /** @cond */ priority_tag<N-1> /** @endcond */ {};
 template <>
 struct priority_tag<0> {};
 
-} // namespace umlaut
-
-namespace umlaut::detail {
+namespace detail {
 
 template <typename T>
 auto itr_helper(priority_tag<1>) -> std::bool_constant<T::is_trivially_relocatable::value>;
@@ -95,9 +92,7 @@ auto itr_helper(priority_tag<0>) -> std::bool_constant<
     std::is_trivially_destructible_v<T>
 >;
 
-} // namespace umlaut::detail
-
-namespace umlaut {
+} // namespace detail
 
 /// @brief Traits class used to determine if a type T is trivially relocatable.
 template <typename T>
@@ -107,4 +102,4 @@ struct is_trivially_relocatable : decltype(detail::itr_helper<T>(priority_tag<1>
 template <typename T>
 inline constexpr bool is_trivially_relocatable_v = is_trivially_relocatable<T>::value;
 
-} // namespace umlaut
+} // namespace ul

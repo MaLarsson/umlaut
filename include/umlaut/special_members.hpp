@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace umlaut::detail {
+namespace ul::detail {
 
 template <bool EnableCopy, bool EnableMove>
 struct delete_ctor_base;
@@ -84,4 +84,4 @@ struct delete_assign_base<false, true> {
     delete_assign_base& operator=(delete_assign_base&&) noexcept = default;
 };
 
-} // namespace umlaut::detail
+} // namespace ul::detail

@@ -8,7 +8,7 @@
 namespace {
 
 TEST(smallVectorBase, listInitialization) {
-    umlaut::small_vector_base<int> v(umlaut::list_construct, 1, 2, 3);
+    ul::small_vector_base<int> v(ul::list_construct, 1, 2, 3);
 
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 2);
@@ -17,7 +17,7 @@ TEST(smallVectorBase, listInitialization) {
 
 TEST(smallVectorBase, listInitializationAlloc) {
     std::allocator<int> alloc;
-    umlaut::small_vector_base<int> v(umlaut::list_construct, alloc, 1 , 2, 3);
+    ul::small_vector_base<int> v(ul::list_construct, alloc, 1 , 2, 3);
 
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 2);
@@ -30,9 +30,9 @@ TEST(smallVectorBase, piecewiseConstuct) {
 	int m_i, m_j;
     };
 
-    umlaut::small_vector_base<type> v(std::piecewise_construct,
-				      std::forward_as_tuple(1, 2),
-				      std::forward_as_tuple(3, 4));
+    ul::small_vector_base<type> v(std::piecewise_construct,
+				  std::forward_as_tuple(1, 2),
+				  std::forward_as_tuple(3, 4));
 }
 
 TEST(smallVectorBase, piecewiseConstuctAlloc) {
@@ -42,9 +42,9 @@ TEST(smallVectorBase, piecewiseConstuctAlloc) {
     };
 
     std::allocator<type> alloc;
-    umlaut::small_vector_base<type> v(std::piecewise_construct, alloc,
-				      std::forward_as_tuple(1, 2),
-				      std::forward_as_tuple(3, 4));
+    ul::small_vector_base<type> v(std::piecewise_construct, alloc,
+				  std::forward_as_tuple(1, 2),
+				  std::forward_as_tuple(3, 4));
 }
 
 } // namespace

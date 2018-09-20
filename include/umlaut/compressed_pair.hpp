@@ -1,5 +1,5 @@
 /// @file
-/// Defines umlaut::compressed_pair.
+/// Defines ul::compressed_pair.
 ///
 /// @copyright Marcus Larsson 2018
 /// Distributed under the Boost Software License, Version 1.0.
@@ -12,7 +12,8 @@
 #include <utility>
 #include <cstddef>
 
-namespace umlaut::detail {
+namespace ul {
+namespace detail {
 
 template <typename T, std::size_t Index, bool = is_empty_base_optimizable_v<T>>
 struct compressed_element {
@@ -45,9 +46,7 @@ struct compressed_element<T, Index, true> : T {
     constexpr const value_type& get_value() const { return *this; }
 };
 
-} // namespace umlaut::detail
-
-namespace umlaut {
+} // namespace detail
 
 /// Generic container for two elements.
 template <typename First, typename Second>
@@ -95,4 +94,4 @@ class compressed_pair : private detail::compressed_element<First, 0>,
     }
 };
 
-} // namespace umlaut
+} // namespace ul

@@ -1,5 +1,5 @@
 /// @file
-/// Defines umlaut::small_vector.
+/// Defines ul::small_vector.
 ///
 /// @copyright Marcus Larsson 2018
 /// Distributed under the Boost Software License, Version 1.0.
@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-namespace umlaut {
+namespace ul {
 
 /// @brief Disambiguator tag.
 ///
@@ -33,7 +33,7 @@ struct list_construct_t {
 };
 
 /// @relates list_construct_t
-/// @brief Instance of the disambiguator tag umlaut::list_construct_t.
+/// @brief Instance of the disambiguator tag ul::list_construct_t.
 inline constexpr list_construct_t list_construct{list_construct_t::do_not_use{}};
 
 /// Generic container.
@@ -206,4 +206,4 @@ public:
     constexpr const allocator_type& m_alloc() const noexcept { return m_data_and_alloc.second(); }
 };
 
-} // namespace umlaut
+} // namespace ul

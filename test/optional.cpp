@@ -14,16 +14,16 @@ TEST(optional, isTriviallyDestructable) {
 	~non_trivial_type() {}
     };
 
-    umlaut::optional<int> trivial{};
-    umlaut::optional<non_trivial_type> non_trivial{};
+    ul::optional<int> trivial{};
+    ul::optional<non_trivial_type> non_trivial{};
 
     EXPECT_TRUE(std::is_trivially_destructible_v<decltype(trivial)>);
     EXPECT_FALSE(std::is_trivially_destructible_v<decltype(non_trivial)>);
 }
 
 TEST(optional, hasValue) {
-    umlaut::optional<int> initialized{std::in_place, 1};
-    umlaut::optional<int> non_initialized{};
+    ul::optional<int> initialized{std::in_place, 1};
+    ul::optional<int> non_initialized{};
 
     EXPECT_TRUE(initialized.has_value());
     EXPECT_FALSE(non_initialized.has_value());
@@ -46,8 +46,8 @@ TEST(optional, propagateCopyConstruction) {
 	non_copyable_type& operator=(non_copyable_type&&) noexcept = default;
     };
 
-    umlaut::optional<copyable_type> copyable;
-    umlaut::optional<non_copyable_type> non_copyable;
+    ul::optional<copyable_type> copyable;
+    ul::optional<non_copyable_type> non_copyable;
 
     EXPECT_TRUE(std::is_copy_constructible_v<decltype(copyable)>);
     EXPECT_FALSE(std::is_copy_constructible_v<decltype(non_copyable)>);
@@ -70,8 +70,8 @@ TEST(optional, propagateMoveConstruction) {
 	non_movable_type& operator=(non_movable_type&&) noexcept = default;
     };
 
-    umlaut::optional<movable_type> movable;
-    umlaut::optional<non_movable_type> non_movable;
+    ul::optional<movable_type> movable;
+    ul::optional<non_movable_type> non_movable;
 
     EXPECT_TRUE(std::is_move_constructible_v<decltype(movable)>);
     EXPECT_TRUE(std::is_nothrow_move_constructible_v<decltype(movable)>);
@@ -81,16 +81,16 @@ TEST(optional, propagateMoveConstruction) {
 int add_three(int value) { return value + 3; }
 
 TEST(optional, thenSuccess) {
-    auto get_optional = []() ->umlaut::optional<int> {
-	return umlaut::optional<int>(std::in_place, 1);
+    auto get_optional = []() ->ul::optional<int> {
+	return ul::optional<int>(std::in_place, 1);
     };
 
-    auto add_ten = [](auto&& value) ->umlaut::optional<int> {
-	return umlaut::optional<int>(std::in_place, value + 10);
+    auto add_ten = [](auto&& value) ->ul::optional<int> {
+	return ul::optional<int>(std::in_place, value + 10);
     };
 
     auto result = get_optional()
-      .then([](auto&& value) { return umlaut::optional<int>(std::in_place, value + 5); })
+      .then([](auto&& value) { return ul::optional<int>(std::in_place, value + 5); })
       .then([](auto&& value) { return value + 1; })
       .then(add_ten)
       .then(&add_three);
@@ -102,9 +102,9 @@ TEST(optional, thenFail) {
     int initial_value = 0;
     bool post_fail_invoked = false;
 
-    auto result = umlaut::optional<int>(std::in_place, 2)
+    auto result = ul::optional<int>(std::in_place, 2)
       .then([&](auto&& value) { initial_value = value; return value; })
-      .then([](auto&&) { return umlaut::optional<int>(umlaut::nullopt); })
+      .then([](auto&&) { return ul::optional<int>(ul::nullopt); })
       .then([&](auto&& value) { post_fail_invoked = true; return value; });
 
     EXPECT_FALSE(post_fail_invoked);
@@ -116,11 +116,11 @@ TEST(optional, catchError) {
     bool first_catch_invoked = false;
     bool second_catch_invoked = false;
 
-    auto first_result = umlaut::optional<int>(std::in_place, 0)
-      .then([](auto&&) { return umlaut::optional<int>(umlaut::nullopt); })
+    auto first_result = ul::optional<int>(std::in_place, 0)
+      .then([](auto&&) { return ul::optional<int>(ul::nullopt); })
       .catch_error([&]() { first_catch_invoked = true; });
 
-    auto second_result = umlaut::optional<int>(std::in_place, 0)
+    auto second_result = ul::optional<int>(std::in_place, 0)
       .then([](auto&& value) { return value + 1; })
       .catch_error([&]() { second_catch_invoked = true; });
 
@@ -131,7 +131,7 @@ TEST(optional, catchError) {
 }
 
 TEST(optional, reset) {
-    umlaut::optional<int> opt{std::in_place, 5};
+    ul::optional<int> opt{std::in_place, 5};
 
     EXPECT_TRUE(opt.has_value());
 
@@ -146,8 +146,8 @@ TEST(optional, emplace) {
 	int i; double d;
     };
 
-    umlaut::optional<int> opt1{std::in_place, 5};
-    umlaut::optional<type> opt2{};
+    ul::optional<int> opt1{std::in_place, 5};
+    ul::optional<type> opt2{};
 
     opt1.emplace(10);
     opt2.emplace(20, 1.1);
@@ -158,11 +158,11 @@ TEST(optional, emplace) {
 }
 
 TEST(optional, convertingCopyConstructor) {
-    umlaut::optional<int> int_optional{std::in_place, 1};
-    umlaut::optional<double> double_optional{int_optional};
+    ul::optional<int> int_optional{std::in_place, 1};
+    ul::optional<double> double_optional{int_optional};
 
-    bool double_to_int = std::is_constructible_v<umlaut::optional<int>, umlaut::optional<double>>;
-    bool int_to_string = std::is_constructible_v<umlaut::optional<std::string>, umlaut::optional<int>>;
+    bool double_to_int = std::is_constructible_v<ul::optional<int>, ul::optional<double>>;
+    bool int_to_string = std::is_constructible_v<ul::optional<std::string>, ul::optional<int>>;
 
     EXPECT_EQ(int_optional.value(), double_optional.value());
     EXPECT_TRUE(double_to_int);
@@ -170,15 +170,15 @@ TEST(optional, convertingCopyConstructor) {
 }
 
 TEST(optional, convertingConstructor) {
-    bool double_to_int = std::is_constructible_v<umlaut::optional<int>, double>;
-    bool int_to_string = std::is_constructible_v<umlaut::optional<std::string>, int>;
+    bool double_to_int = std::is_constructible_v<ul::optional<int>, double>;
+    bool int_to_string = std::is_constructible_v<ul::optional<std::string>, int>;
 
     EXPECT_TRUE(double_to_int);
     EXPECT_FALSE(int_to_string);
 }
 
 TEST(optional, convertingAssignment) {
-    umlaut::optional<double> double_optional(3.33);
+    ul::optional<double> double_optional(3.33);
     double_optional = 1;
 
     EXPECT_TRUE(double_optional.has_value());
@@ -186,8 +186,8 @@ TEST(optional, convertingAssignment) {
 }
 
 TEST(optional, swapBothHasValue) {
-    umlaut::optional<int> opt1{1};
-    umlaut::optional<int> opt2{2};
+    ul::optional<int> opt1{1};
+    ul::optional<int> opt2{2};
 
     opt1.swap(opt2);
 
@@ -196,8 +196,8 @@ TEST(optional, swapBothHasValue) {
 }
 
 TEST(optional, swapOneHasValue) {
-    umlaut::optional<int> opt1{1};
-    umlaut::optional<int> opt2{umlaut::nullopt};
+    ul::optional<int> opt1{1};
+    ul::optional<int> opt2{ul::nullopt};
 
     opt1.swap(opt2);
 
@@ -213,8 +213,8 @@ TEST(optional, swapOneHasValue) {
 }
 
 TEST(optional, adlSwap) {
-    umlaut::optional<int> opt1{1};
-    umlaut::optional<int> opt2{2};
+    ul::optional<int> opt1{1};
+    ul::optional<int> opt2{2};
 
     using std::swap;
     swap(opt1, opt2);

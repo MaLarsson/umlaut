@@ -13,16 +13,16 @@ struct empty_cat {
 };
 
 TEST(compressedPair, size) {
-    umlaut::compressed_pair<int, int> largest{1, 1};
-    umlaut::compressed_pair<int, empty_cat> middle{1, {}};
-    umlaut::compressed_pair<empty_cat, empty_cat> smallest{{}, {}};
+    ul::compressed_pair<int, int> largest{1, 1};
+    ul::compressed_pair<int, empty_cat> middle{1, {}};
+    ul::compressed_pair<empty_cat, empty_cat> smallest{{}, {}};
 
     EXPECT_TRUE(sizeof(largest) > sizeof(middle));
     EXPECT_TRUE(sizeof(middle) > sizeof(smallest));
 }
 
 TEST(compressedPair, access) {
-    umlaut::compressed_pair<int, empty_cat> pair{42, {}};
+    ul::compressed_pair<int, empty_cat> pair{42, {}};
 
     EXPECT_EQ(pair.first(), 42);
     EXPECT_EQ(pair.second().purr(), "purr");
