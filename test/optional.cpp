@@ -223,4 +223,19 @@ TEST(optional, adlSwap) {
     EXPECT_EQ(opt2.value(), 1);
 }
 
+TEST(optional, deductionGuides) {
+    ul::optional int_opt{1};
+
+    bool is_int_opt = std::is_same_v<ul::optional<int>, decltype(int_opt)>;
+
+    int array[2];
+    ul::optional array_opt{array};
+
+    bool is_array_opt = std::is_same_v<ul::optional<std::decay_t<decltype(array)>>,
+				       decltype(array_opt)>;
+
+    EXPECT_TRUE(is_int_opt);
+    EXPECT_TRUE(is_array_opt);
+}
+
 } // namespace

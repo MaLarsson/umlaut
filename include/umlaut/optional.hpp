@@ -847,4 +847,7 @@ constexpr bool operator>=(const T& value, const optional<U>& opt) {
     return true;
 }
 
+// deduction guide
+template <typename T> optional(T) -> optional<T>;
+
 } // namespace ul
