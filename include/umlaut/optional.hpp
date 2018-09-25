@@ -666,8 +666,7 @@ swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
 
 // compare optionals
 template <typename T, typename U>
-constexpr bool operator==(const optional<T>& lhs, const optional<U>& rhs)
-{
+constexpr bool operator==(const optional<T>& lhs, const optional<U>& rhs) {
     // TODO ...
     return true;
 }
@@ -702,7 +701,7 @@ constexpr bool operator>=(const optional<T>& lhs, const optional<U>& rhs) {
     return true;
 }
 
-// compare optional and nullopt
+// compare optional and nullopt_t
 template <typename T>
 constexpr bool operator==(const optional<T>& opt, ul::nullopt_t) noexcept {
     // TODO ...
