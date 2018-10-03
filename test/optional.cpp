@@ -2,34 +2,16 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
-#include <gtest/gtest.h>
+#include <catch2/catch.hpp>
 #include <umlaut/optional.hpp>
 #include <type_traits>
 #include <string>
 
-namespace {
-
-TEST(optional, isTriviallyDestructable) {
+TEST_CASE("progagate traits from underlying type for optional", "[optional]") {
     struct non_trivial_type {
 	~non_trivial_type() {}
     };
 
-    ul::optional<int> trivial{};
-    ul::optional<non_trivial_type> non_trivial{};
-
-    EXPECT_TRUE(std::is_trivially_destructible_v<decltype(trivial)>);
-    EXPECT_FALSE(std::is_trivially_destructible_v<decltype(non_trivial)>);
-}
-
-TEST(optional, hasValue) {
-    ul::optional<int> initialized{std::in_place, 1};
-    ul::optional<int> non_initialized{};
-
-    EXPECT_TRUE(initialized.has_value());
-    EXPECT_FALSE(non_initialized.has_value());
-}
-
-TEST(optional, propagateCopyConstruction) {
     struct copyable_type {
 	copyable_type() = default;
 	copyable_type(const copyable_type&) = default;
@@ -46,14 +28,6 @@ TEST(optional, propagateCopyConstruction) {
 	non_copyable_type& operator=(non_copyable_type&&) noexcept = default;
     };
 
-    ul::optional<copyable_type> copyable;
-    ul::optional<non_copyable_type> non_copyable;
-
-    EXPECT_TRUE(std::is_copy_constructible_v<decltype(copyable)>);
-    EXPECT_FALSE(std::is_copy_constructible_v<decltype(non_copyable)>);
-}
-
-TEST(optional, propagateMoveConstruction) {
     struct movable_type {
 	movable_type() = default;
 	movable_type(const movable_type&) = default;
@@ -70,172 +44,252 @@ TEST(optional, propagateMoveConstruction) {
 	non_movable_type& operator=(non_movable_type&&) noexcept = default;
     };
 
+    ul::optional<int> trivial;
+    ul::optional<non_trivial_type> non_trivial;
+    ul::optional<copyable_type> copyable;
+    ul::optional<non_copyable_type> non_copyable;
     ul::optional<movable_type> movable;
     ul::optional<non_movable_type> non_movable;
 
-    EXPECT_TRUE(std::is_move_constructible_v<decltype(movable)>);
-    EXPECT_TRUE(std::is_nothrow_move_constructible_v<decltype(movable)>);
-    EXPECT_FALSE(std::is_move_constructible_v<decltype(non_movable)>);
+    SECTION("is trivially destructable") {
+	CHECK(std::is_trivially_destructible_v<decltype(trivial)>);
+	CHECK_FALSE(std::is_trivially_destructible_v<decltype(non_trivial)>);
+    }
+
+    SECTION("copy construction") {
+	CHECK(std::is_copy_constructible_v<decltype(copyable)>);
+	CHECK_FALSE(std::is_copy_constructible_v<decltype(non_copyable)>);
+    }
+
+    SECTION("move construction") {
+	CHECK(std::is_move_constructible_v<decltype(movable)>);
+	CHECK(std::is_nothrow_move_constructible_v<decltype(movable)>);
+	CHECK_FALSE(std::is_move_constructible_v<decltype(non_movable)>);
+    }
 }
 
 int add_three(int value) { return value + 3; }
 
-TEST(optional, thenSuccess) {
-    auto get_optional = []() ->ul::optional<int> {
-	return ul::optional<int>(std::in_place, 1);
-    };
+TEST_CASE("use the monadic interface of optional", "[optional][monads]") {
+    ul::optional opt{1};
 
-    auto add_ten = [](auto&& value) ->ul::optional<int> {
-	return ul::optional<int>(std::in_place, value + 10);
-    };
+    auto add_ten = [](auto&& value) ->ul::optional<int> { return value + 10; };
 
-    auto result = get_optional()
-      .then([](auto&& value) { return ul::optional<int>(std::in_place, value + 5); })
-      .then([](auto&& value) { return value + 1; })
-      .then(add_ten)
-      .then(&add_three);
+    SECTION("single then successfully") {
+	auto result = opt.then([](auto&& value) { return value + 1; });
 
-    EXPECT_EQ(result.value(), 20);
+	CHECK(result.has_value());
+	CHECK(result.value() == 2);
+    }
+
+    SECTION("single then failed") {
+	auto result = opt.then([](auto&&) { return ul::nullopt; });
+
+	CHECK_FALSE(result.has_value());
+    }
+
+    SECTION("chaining then successfully") {
+	auto result = opt
+	  .then([](auto&& value) { return ul::optional<int>(std::in_place, value + 5); })
+	  .then([](auto&& value) { return value + 1; })
+	  .then(add_ten)
+	  .then(&add_three);
+
+	CHECK(result.has_value());
+	CHECK(result.value() == 20);
+    }
+
+    SECTION("chaining then failed") {
+	int initial_value = 0;
+	bool post_fail_invoked = false;
+
+	auto result = opt
+	  .then([&](auto&& value) { initial_value = value; return value; })
+	  .then([](auto&&) { return ul::nullopt; })
+	  .then([&](auto&& value) { post_fail_invoked = true; return value; });
+
+	CHECK_FALSE(post_fail_invoked);
+	CHECK(initial_value == 1);
+	CHECK_FALSE(result.has_value());
+    }
+
+    SECTION("not invoking catch_error after then") {
+	bool catch_invoked = false;
+
+	auto result = opt
+	  .then([](auto&& value) { return value; })
+	  .catch_error([&]() { catch_invoked = true; });
+
+	CHECK_FALSE(catch_invoked);
+	CHECK(result.has_value());
+    }
+
+    SECTION("invoking catch_error after then") {
+	bool catch_invoked = false;
+
+	auto result = opt
+	  .then([](auto&&) { return ul::nullopt; })
+	  .catch_error([&]() { catch_invoked = true; });
+
+	CHECK(catch_invoked);
+	CHECK_FALSE(result.has_value());
+    }
+
+    SECTION("not invoking catch_error without then") {
+	bool catch_invoked = false;
+
+	auto result = opt.catch_error([&]() { catch_invoked = true; });
+
+	CHECK_FALSE(catch_invoked);
+	CHECK(result.has_value());
+    }
+
+    SECTION("invoking catch_error without then") {
+	bool catch_invoked = false;
+
+	auto result = ul::optional<int>{ul::nullopt}
+	  .catch_error([&]() { catch_invoked = true; });
+
+	CHECK(catch_invoked);
+	CHECK_FALSE(result.has_value());
+    }
 }
 
-TEST(optional, thenFail) {
-    int initial_value = 0;
-    bool post_fail_invoked = false;
+TEST_CASE("modification of optional", "[optional]") {
+    ul::optional opt{1};
+    ul::optional<int> null_opt{ul::nullopt};
 
-    auto result = ul::optional<int>(std::in_place, 2)
-      .then([&](auto&& value) { initial_value = value; return value; })
-      .then([](auto&&) { return ul::optional<int>(ul::nullopt); })
-      .then([&](auto&& value) { post_fail_invoked = true; return value; });
+    CHECK(opt.has_value());
+    CHECK(opt.value() == 1);
+    CHECK_FALSE(null_opt.has_value());
 
-    EXPECT_FALSE(post_fail_invoked);
-    EXPECT_EQ(initial_value, 2);
-    EXPECT_FALSE(result.has_value());
+    SECTION("reset value of the optional") {
+	opt.reset();
+	null_opt.reset();
+
+	CHECK_FALSE(opt.has_value());
+	CHECK_FALSE(null_opt.has_value());
+    }
+
+    SECTION("emplace a builtin value into the optional") {
+	opt.emplace(10);
+	null_opt.emplace(20);
+
+	CHECK(opt.has_value());
+	CHECK(opt.value() == 10);
+
+	CHECK(null_opt.has_value());
+	CHECK(opt.value() == 10);
+    }
+
+    SECTION("emplace custom type into the optional") {
+	struct type {
+	    type(int i, double d) : i(i), d(d) {}
+	    int i; double d;
+	};
+
+	ul::optional<type> type_opt{std::in_place, 1, 2.0};
+	ul::optional<type> null_type_opt{ul::nullopt};
+
+	type_opt.emplace(10, 20);
+	null_type_opt.emplace(30, 40.5);
+
+	CHECK(type_opt.has_value());
+	CHECK(type_opt.value().i == 10);
+	CHECK(type_opt.value().d == 20);
+
+	CHECK(null_type_opt.has_value());
+	CHECK(null_type_opt.value().i == 30);
+	CHECK(null_type_opt.value().d == 40.5);
+    }
+
+    SECTION("swap with two optionals, both containing a value") {
+	ul::optional opt2{2};
+
+	opt.swap(opt2);
+
+	CHECK(opt.has_value());
+	CHECK(opt.value() == 2);
+
+	CHECK(opt2.has_value());
+	CHECK(opt2.value() == 1);
+    }
+
+    SECTION("swap with two optionals, only one containing a value") {
+	opt.swap(null_opt);
+
+	CHECK_FALSE(opt.has_value());
+	CHECK(null_opt.has_value());
+	CHECK(null_opt.value() == 1);
+
+	opt.swap(null_opt);
+
+	CHECK_FALSE(null_opt.has_value());
+	CHECK(opt.has_value());
+	CHECK(opt.value() == 1);
+    }
+
+    SECTION("swap with two optionals, neither containing a value") {
+	ul::optional<int> null_opt2{ul::nullopt};
+
+	null_opt.swap(null_opt2);
+
+	CHECK_FALSE(null_opt.has_value());
+	CHECK_FALSE(null_opt2.has_value());
+    }
+
+    SECTION("swaping using adl") {
+	using std::swap;
+	swap(opt, null_opt);
+
+	CHECK_FALSE(opt.has_value());
+	CHECK(null_opt.has_value());
+	CHECK(null_opt.value() == 1);
+    }
 }
 
-TEST(optional, catchError) {
-    bool first_catch_invoked = false;
-    bool second_catch_invoked = false;
+TEST_CASE("construction of optional", "[optional]") {
+    SECTION("converting constructor") {
+	CHECK(std::is_constructible_v<ul::optional<int>, double>);
+	CHECK_FALSE(std::is_constructible_v<ul::optional<std::string>, int>);
+    }
 
-    auto first_result = ul::optional<int>(std::in_place, 0)
-      .then([](auto&&) { return ul::optional<int>(ul::nullopt); })
-      .catch_error([&]() { first_catch_invoked = true; });
+    SECTION("converting copy constructor") {
+	ul::optional<int> int_opt{std::in_place, 1};
+	ul::optional<double> double_opt{int_opt};
 
-    auto second_result = ul::optional<int>(std::in_place, 0)
-      .then([](auto&& value) { return value + 1; })
-      .catch_error([&]() { second_catch_invoked = true; });
+	CHECK(int_opt.has_value());
+	CHECK(double_opt.has_value());
+	CHECK(int_opt.value() == double_opt.value());
 
-    EXPECT_TRUE(first_catch_invoked);
-    EXPECT_FALSE(first_result.has_value());
-    EXPECT_FALSE(second_catch_invoked);
-    EXPECT_TRUE(second_result.has_value());
+	CHECK(std::is_constructible_v<ul::optional<int>, ul::optional<double>>);
+	CHECK_FALSE(std::is_constructible_v<ul::optional<std::string>, ul::optional<int>>);
+    }
+
+    SECTION("deduction guide for optional") {
+	int array[2];
+
+	ul::optional int_opt{1};
+	ul::optional array_opt{array};
+
+	CHECK(std::is_same_v<ul::optional<int>, decltype(int_opt)>);
+	CHECK(std::is_same_v<ul::optional<std::decay_t<decltype(array)>>, decltype(array_opt)>);
+    }
 }
 
-TEST(optional, reset) {
-    ul::optional<int> opt{std::in_place, 5};
+TEST_CASE("assignment of optional", "[optional]") {
+    ul::optional opt{3.33};
 
-    EXPECT_TRUE(opt.has_value());
+    SECTION("converting assignment") {
+	opt = 3; // implicit conversion from int to double
 
-    opt.reset();
+	CHECK(opt.has_value());
+	CHECK(opt.value() == 3);
+    }
 
-    EXPECT_FALSE(opt.has_value());
+    SECTION("assignment of nullopt") {
+	opt = ul::nullopt;
+
+	CHECK_FALSE(opt.has_value());
+    }
 }
-
-TEST(optional, emplace) {
-    struct type {
-	type(int i, double d) : i(i), d(d) {}
-	int i; double d;
-    };
-
-    ul::optional<int> opt1{std::in_place, 5};
-    ul::optional<type> opt2{};
-
-    opt1.emplace(10);
-    opt2.emplace(20, 1.1);
-
-    EXPECT_EQ(opt1.value(), 10);
-    EXPECT_EQ(opt2.value().i, 20);
-    EXPECT_EQ(opt2.value().d, 1.1);
-}
-
-TEST(optional, convertingCopyConstructor) {
-    ul::optional<int> int_optional{std::in_place, 1};
-    ul::optional<double> double_optional{int_optional};
-
-    bool double_to_int = std::is_constructible_v<ul::optional<int>, ul::optional<double>>;
-    bool int_to_string = std::is_constructible_v<ul::optional<std::string>, ul::optional<int>>;
-
-    EXPECT_EQ(int_optional.value(), double_optional.value());
-    EXPECT_TRUE(double_to_int);
-    EXPECT_FALSE(int_to_string);
-}
-
-TEST(optional, convertingConstructor) {
-    bool double_to_int = std::is_constructible_v<ul::optional<int>, double>;
-    bool int_to_string = std::is_constructible_v<ul::optional<std::string>, int>;
-
-    EXPECT_TRUE(double_to_int);
-    EXPECT_FALSE(int_to_string);
-}
-
-TEST(optional, convertingAssignment) {
-    ul::optional<double> double_optional(3.33);
-    double_optional = 1;
-
-    EXPECT_TRUE(double_optional.has_value());
-    EXPECT_EQ(double_optional.value(), 1);
-}
-
-TEST(optional, swapBothHasValue) {
-    ul::optional<int> opt1{1};
-    ul::optional<int> opt2{2};
-
-    opt1.swap(opt2);
-
-    EXPECT_EQ(opt1.value(), 2);
-    EXPECT_EQ(opt2.value(), 1);
-}
-
-TEST(optional, swapOneHasValue) {
-    ul::optional<int> opt1{1};
-    ul::optional<int> opt2{ul::nullopt};
-
-    opt1.swap(opt2);
-
-    EXPECT_FALSE(opt1.has_value());
-    EXPECT_TRUE(opt2.has_value());
-    EXPECT_EQ(opt2.value(), 1);
-
-    opt1.swap(opt2);
-
-    EXPECT_FALSE(opt2.has_value());
-    EXPECT_TRUE(opt1.has_value());
-    EXPECT_EQ(opt1.value(), 1);
-}
-
-TEST(optional, adlSwap) {
-    ul::optional<int> opt1{1};
-    ul::optional<int> opt2{2};
-
-    using std::swap;
-    swap(opt1, opt2);
-
-    EXPECT_EQ(opt1.value(), 2);
-    EXPECT_EQ(opt2.value(), 1);
-}
-
-TEST(optional, deductionGuides) {
-    ul::optional int_opt{1};
-
-    bool is_int_opt = std::is_same_v<ul::optional<int>, decltype(int_opt)>;
-
-    int array[2];
-    ul::optional array_opt{array};
-
-    bool is_array_opt = std::is_same_v<ul::optional<std::decay_t<decltype(array)>>,
-				       decltype(array_opt)>;
-
-    EXPECT_TRUE(is_int_opt);
-    EXPECT_TRUE(is_array_opt);
-}
-
-} // namespace

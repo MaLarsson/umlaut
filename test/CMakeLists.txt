@@ -34,9 +34,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CATCH2_DIR}/contrib")
 add_executable(umlaut_test EXCLUDE_FROM_ALL
   main.cpp
   compressed_pair.cpp
+  optional.cpp
   small_vector.cpp)
-
-#  optional.cpp
 
 target_link_libraries(umlaut_test Umlaut::Umlaut Catch2::Catch2)
 
