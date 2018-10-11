@@ -22,6 +22,12 @@ matrix:
     - env: DOCUMENTATION=true COMPILER=default CMAKE_OPTIONS="-DUMLAUT_ENABLE_TESTS=OFF"
       addons: *defaults
 
+    ##########################################################################
+    # Generate code coverage
+    ##########################################################################
+    - env: COVERAGE=true UNIT_TESTS=true COMPILER=default CMAKE_OPTIONS="-DUMLAUT_ENABLE_COVERAGE=ON"
+      addons: *defaults
+
 install:
   ############################################################################
   # All the dependencies are installed in ${HOME}/deps/
@@ -90,7 +96,7 @@ install:
 
 script:
   ############################################################################
-  # Build and push documentation.
+  # Build and push documentation
   ############################################################################
   - |
     if [[ "${DOCUMENTATION}" == "true" ]]; then
@@ -114,9 +120,17 @@ script:
     fi
 
   ############################################################################
-  # Build and run the unit tests.
+  # Build and run the unit tests
   ############################################################################
   - |
     if [[ "${UNIT_TESTS}" == "true" ]]; then
       (cd build && cmake --build . --target check -- -j2)
+    fi
+
+  ############################################################################
+  # Upload code coverage
+  ############################################################################
+  - |
+    if [[ "${COVERAGE}" == "true" ]]; then
+      bash <(curl -s https://codecov.io/bash)
     fi
