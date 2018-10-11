@@ -30,6 +30,10 @@ add_subdirectory(${CATCH2_DIR} ${CATCH2_DIR} EXCLUDE_FROM_ALL)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CATCH2_DIR}/contrib")
 
+if (CMAKE_COMPILER_IS_GNUCC AND UMLAUT_ENABLE_COVERAGE)
+  add_compile_options(--coverage -O0)
+endif()
+
 # Add check target
 add_executable(umlaut_test EXCLUDE_FROM_ALL
   main.cpp
@@ -40,7 +44,6 @@ add_executable(umlaut_test EXCLUDE_FROM_ALL
 target_link_libraries(umlaut_test Umlaut::Umlaut Catch2::Catch2)
 
 if (CMAKE_COMPILER_IS_GNUCC AND UMLAUT_ENABLE_COVERAGE)
-  add_compile_options(--coverage -O0)
   target_link_libraries(umlaut_test --coverage)
 endif()
 
