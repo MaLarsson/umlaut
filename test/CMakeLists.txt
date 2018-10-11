@@ -39,6 +39,11 @@ add_executable(umlaut_test EXCLUDE_FROM_ALL
 
 target_link_libraries(umlaut_test Umlaut::Umlaut Catch2::Catch2)
 
+if (CMAKE_COMPILER_IS_GNUCC AND UMLAUT_ENABLE_COVERAGE)
+  target_compile_options(umlaut_test --coverage -O0)
+  target_link_libraries(umlaut_test --coverage)
+endif()
+
 include(CTest)
 include(Catch)
 
