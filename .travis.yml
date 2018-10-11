@@ -25,8 +25,8 @@ matrix:
     ##########################################################################
     # Generate code coverage
     ##########################################################################
-    - env: COVERAGE=true UNIT_TESTS=true COMPILER=default CMAKE_OPTIONS="-DUMLAUT_ENABLE_COVERAGE=ON"
-      addons: *defaults
+    - env: COVERAGE=true UNIT_TESTS=true COMPILER=g++-7 CMAKE_OPTIONS="-DUMLAUT_ENABLE_COVERAGE=ON"
+      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
 
 install:
   ############################################################################
