@@ -89,14 +89,6 @@ install:
     fi
 
   ############################################################################
-  # Install coveragepy
-  ############################################################################
-  - |
-    if [[ "${COVERAGE}" == "true" ]]; then
-       pip install coverage
-    fi
-
-  ############################################################################
   # Go back to the root of the project and setup the build directory
   ############################################################################
   - cd "${TRAVIS_BUILD_DIR}"
@@ -135,11 +127,5 @@ script:
       (cd build && cmake --build . --target check -- -j2)
     fi
 
-  ############################################################################
-  # Upload code coverage
-  ############################################################################
-  - |
-    if [[ "${COVERAGE}" == "true" ]]; then
-      ls -Rla
-      bash <(curl -s https://codecov.io/bash)
-    fi
+after_success:
+  - if [[ ${COVERAGE} == "true" ]]; then bash <(curl -s https://codecov.io/bash); fi
