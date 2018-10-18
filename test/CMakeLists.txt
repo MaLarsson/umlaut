@@ -37,7 +37,12 @@ add_executable(umlaut_test EXCLUDE_FROM_ALL
   optional.cpp
   small_vector.cpp)
 
-target_link_libraries(umlaut_test Umlaut::Umlaut Catch2::Catch2)
+target_link_libraries(umlaut_test PUBLIC Umlaut::Umlaut Catch2::Catch2)
+
+if (CMAKE_COMPILER_IS_GNUCC AND UMLAUT_ENABLE_COVERAGE)
+  target_compile_options(umlaut_test PRIVATE --coverage)
+  target_link_libraries(umlaut_test PRIVATE --coverage)
+endif()
 
 include(CTest)
 include(Catch)

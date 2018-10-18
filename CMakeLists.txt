@@ -6,7 +6,11 @@ cmake_minimum_required(VERSION 3.5)
 project(Umlaut VERSION 0.1.0)
 
 # Config options
-option(UMLAUT_ENABLE_TESTS "Enable building the unit tests which depend on gtest" ON)
+option(UMLAUT_ENABLE_TESTS "Enable building the unit tests which depend on catch2" ON)
+
+if (CMAKE_COMPILER_IS_GNUCC)
+  option(UMLAUT_ENABLE_COVERAGE "Enable test coverage reporting for gcc/clang" OFF)
+endif()
 
 # Compiler warnings
 if (MSVC)
