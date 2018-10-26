@@ -21,11 +21,12 @@ struct compressed_element {
     constexpr compressed_element() : m_value() {}
 
     template <typename U = T>
-    constexpr compressed_element(U&& value)
-	: m_value(std::forward<U>(value)) {}
+    constexpr compressed_element(U&& value) : m_value(std::forward<U>(value)) {}
 
-    constexpr value_type& get_value() { return m_value; }
-    constexpr const value_type& get_value() const { return m_value; }
+    constexpr value_type& get_value() & { return m_value; }
+    constexpr value_type&& get_value() && { return std::move(m_value); }
+    constexpr const value_type& get_value() const & { return m_value; }
+    constexpr const value_type&& get_value() const && { return std::move(m_value); }
 
  private:
     value_type m_value;
@@ -41,8 +42,10 @@ struct compressed_element<T, Index, true> : T {
     constexpr compressed_element(U&& value)
 	: value_type(std::forward<U>(value)) {}
 
-    constexpr value_type& get_value() { return *this; }
-    constexpr const value_type& get_value() const { return *this; }
+    constexpr value_type& get_value() & { return *this; }
+    constexpr value_type&& get_value() && { return std::move(*this); }
+    constexpr const value_type& get_value() const & { return *this; }
+    constexpr const value_type&& get_value() const && { return std::move(*this); }
 };
 
 } // namespace detail
@@ -50,33 +53,49 @@ struct compressed_element<T, Index, true> : T {
 template <typename First, typename Second>
 class compressed_pair : private detail::compressed_element<First, 0>,
 			private detail::compressed_element<Second, 1> {
-    using Base1 = detail::compressed_element<First, 0>;
-    using Base2 = detail::compressed_element<Second, 1>;
+    using first_base = detail::compressed_element<First, 0>;
+    using second_base = detail::compressed_element<Second, 1>;
 
  public:
-    using first_type = First;
-    using second_type = Second;
+    using first_type = typename first_base::value_type;
+    using second_type = typename second_base::value_type;
 
-    constexpr compressed_pair() : Base1(), Base2() {}
+    constexpr compressed_pair() : first_base(), second_base() {}
 
     template <typename T = First, typename U = Second>
     constexpr compressed_pair(T&& first, U&& second)
-	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
+	: first_base(std::forward<T>(first)), second_base(std::forward<U>(second)) {}
 
-    constexpr first_type& first() {
-	return static_cast<Base1&>(*this).get_value();
+    constexpr first_type& first() & {
+	return static_cast<first_base&>(*this).get_value();
     }
 
-    constexpr const first_type& first() const {
-	return static_cast<const Base1&>(*this).get_value();
+    constexpr first_type&& first() && {
+	return std::move(static_cast<first_base&&>(*this).get_value());
     }
 
-    constexpr second_type& second() {
-	return static_cast<Base2&>(*this).get_value();
+    constexpr const first_type& first() const & {
+	return static_cast<const first_base&>(*this).get_value();
     }
 
-    constexpr const second_type& second() const {
-	return static_cast<const Base2&>(*this).get_value();
+    constexpr const first_type&& first() const && {
+	return std::move(static_cast<const first_base&&>(*this).get_value());
+    }
+
+    constexpr second_type& second() & {
+	return static_cast<second_base&>(*this).get_value();
+    }
+
+    constexpr second_type&& second() && {
+	return std::move(static_cast<second_base&&>(*this).get_value());
+    }
+
+    constexpr const second_type& second() const & {
+	return static_cast<const second_base&>(*this).get_value();
+    }
+
+    constexpr const second_type&& second() const && {
+	return std::move(static_cast<const second_base&&>(*this).get_value());
     }
 };
 
