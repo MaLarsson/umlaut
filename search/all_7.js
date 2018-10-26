@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['operator_5b_5d',['operator[]',['../classul_1_1small__vector__base.html#a631a8f759fba137b22e0dffb3b6f9448',1,'ul::small_vector_base::operator[](size_type i)'],['../classul_1_1small__vector__base.html#ad46ba843a1635e6eb8da044e33cb42dd',1,'ul::small_vector_base::operator[](size_type i) const ']]],
-  ['optional_2ehpp',['optional.hpp',['../optional_8hpp.html',1,'']]]
+  ['pack_5felement_5ft',['pack_element_t',['../traits_8hpp.html#a4cb4d0e9eccc07105e48411775180c5b',1,'ul']]],
+  ['priority_5ftag',['priority_tag',['../structul_1_1priority__tag.html',1,'ul']]],
+  ['push_5fback',['push_back',['../classul_1_1small__vector__base.html#a8b0c59bf6f886500d38dbbf3a617cb38',1,'ul::small_vector_base::push_back(const value_type &amp;value)'],['../classul_1_1small__vector__base.html#af7e63ca42c42f798aeebfdaf90ef1aab',1,'ul::small_vector_base::push_back(value_type &amp;&amp;value)']]]
 ];

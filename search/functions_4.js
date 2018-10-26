@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['max_5fsize',['max_size',['../classul_1_1small__vector__base.html#a93e6f2fb60e71f965fc0c2c76d2e3966',1,'ul::small_vector_base']]]
+  ['operator_5b_5d',['operator[]',['../classul_1_1small__vector__base.html#a631a8f759fba137b22e0dffb3b6f9448',1,'ul::small_vector_base::operator[](size_type i)'],['../classul_1_1small__vector__base.html#ad46ba843a1635e6eb8da044e33cb42dd',1,'ul::small_vector_base::operator[](size_type i) const ']]]
 ];

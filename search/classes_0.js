@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['compressed_5fpair',['compressed_pair',['../classul_1_1compressed__pair.html',1,'ul']]],
-  ['compressed_5fpair_3c_20pointer_2c_20allocator_5ftype_20_3e',['compressed_pair&lt; pointer, allocator_type &gt;',['../classul_1_1compressed__pair.html',1,'ul']]]
+  ['is_5fcontiguous_5fiterator',['is_contiguous_iterator',['../structul_1_1is__contiguous__iterator.html',1,'ul']]],
+  ['is_5fempty_5fbase_5foptimizable',['is_empty_base_optimizable',['../structul_1_1is__empty__base__optimizable.html',1,'ul']]],
+  ['is_5ftrivially_5frelocatable',['is_trivially_relocatable',['../structul_1_1is__trivially__relocatable.html',1,'ul']]]
 ];
