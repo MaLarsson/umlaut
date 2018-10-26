@@ -1,9 +1,8 @@
-/// @file
-/// Defines ul::compressed_pair.
-///
-/// @copyright Marcus Larsson 2018
-/// Distributed under the Boost Software License, Version 1.0.
-/// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+// Defines ul::compressed_pair.
+//
+// Copyright Marcus Larsson 2018
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 #pragma once
 
@@ -48,7 +47,6 @@ struct compressed_element<T, Index, true> : T {
 
 } // namespace detail
 
-/// Generic container for two elements.
 template <typename First, typename Second>
 class compressed_pair : private detail::compressed_element<First, 0>,
 			private detail::compressed_element<Second, 1> {
@@ -56,39 +54,27 @@ class compressed_pair : private detail::compressed_element<First, 0>,
     using Base2 = detail::compressed_element<Second, 1>;
 
  public:
-    /// @name Aliases
-    /// @{
     using first_type = First;
     using second_type = Second;
-    // @}
 
-    /// @brief Default constructs the `compressed_pair`.
     constexpr compressed_pair() : Base1(), Base2() {}
 
-    /// @brief Constructs the `compressed_pair` from first and second.
-    ///
-    /// Forward the first and second arguments to the cope/move constructor of the
-    /// first and second element respectivly.
     template <typename T = First, typename U = Second>
     constexpr compressed_pair(T&& first, U&& second)
 	: Base1(std::forward<T>(first)), Base2(std::forward<U>(second)) {}
 
-    /// @brief Returns the value of the first element.
     constexpr first_type& first() {
 	return static_cast<Base1&>(*this).get_value();
     }
 
-    /// @brief Const overload of `compressed_pair::first()`.
     constexpr const first_type& first() const {
 	return static_cast<const Base1&>(*this).get_value();
     }
 
-    /// @brief Returns the value of the second element.
     constexpr second_type& second() {
 	return static_cast<Base2&>(*this).get_value();
     }
 
-    /// @brief Const overload of `compressed_pair::second()`.
     constexpr const second_type& second() const {
 	return static_cast<const Base2&>(*this).get_value();
     }
