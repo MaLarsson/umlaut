@@ -645,39 +645,69 @@ swap(optional<T>& lhs, optional<T>& rhs) noexcept(noexcept(lhs.swap(rhs))) {
 
 // compare optionals
 template <typename T, typename U>
-constexpr bool operator==(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() == std::declval<const U&>()), bool>,
+    bool>
+operator==(const optional<T>& lhs, const optional<U>& rhs) {
+    if (lhs.has_value() != rhs.has_value()) return false;
+    if (!lhs.has_value()) return true;
+    return *lhs == *rhs;
 }
 
-template <typename T,typename U>
-constexpr bool operator!=(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+template <typename T, typename U>
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() != std::declval<const U&>()), bool>,
+    bool>
+operator!=(const optional<T>& lhs, const optional<U>& rhs) {
+    if (lhs.has_value() != rhs.has_value()) return true;
+    if (!lhs.has_value()) return false;
+    return *lhs != *rhs;
 }
 
-template <typename T,typename U>
-constexpr bool operator<(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+template <typename T, typename U>
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() < std::declval<const U&>()), bool>,
+    bool>
+operator<(const optional<T>& lhs, const optional<U>& rhs) {
+    if (!rhs.has_value()) return false;
+    if (!lhs.has_value()) return true;
+    return *lhs < *rhs;
 }
 
-template <typename T,typename U>
-constexpr bool operator<=(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+template <typename T, typename U>
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() > std::declval<const U&>()), bool>,
+    bool>
+operator>(const optional<T>& lhs, const optional<U>& rhs) {
+    if (!lhs.has_value()) return false;
+    if (!rhs.has_value()) return true;
+    return *lhs > *rhs;
 }
 
-template <typename T,typename U>
-constexpr bool operator>(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+template <typename T, typename U>
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() <= std::declval<const U&>()), bool>,
+    bool>
+operator<=(const optional<T>& lhs, const optional<U>& rhs) {
+    if (!lhs.has_value()) return true;
+    if (!rhs.has_value()) return false;
+    return *lhs <= *rhs;
 }
 
-template <typename T,typename U>
-constexpr bool operator>=(const optional<T>& lhs, const optional<U>& rhs) {
-    // TODO ...
-    return true;
+template <typename T, typename U>
+constexpr std::enable_if<
+    std::is_convertible_v<
+        decltype(std::declval<const T&>() >= std::declval<const U&>()), bool>,
+    bool>
+operator>=(const optional<T>& lhs, const optional<U>& rhs) {
+    if (!rhs.has_value()) return true;
+    if (!lhs.has_value()) return false;
+    return *lhs >= *rhs;
 }
 
 // compare optional and nullopt_t
